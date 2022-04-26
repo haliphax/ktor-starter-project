@@ -1,0 +1,41 @@
+<project>
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.haliphax</groupId>
+	<artifactId>ktest</artifactId>
+	<version>1.0</version>
+	<packaging>jar</packaging>
+
+	<properties>
+		<kotlin.version>1.6.21</kotlin.version>
+	</properties>
+
+	<build>
+		<sourceDirectory>${project.basedir}</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<artifactId>kotlin-maven-plugin</artifactId>
+				<groupId>org.jetbrains.kotlin</groupId>
+				<version>${kotlin.version}</version>
+
+				<executions>
+					<execution>
+						<id>compile</id>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jetbrains.kotlin</groupId>
+			<artifactId>kotlin-stdlib-jdk8</artifactId>
+			<version>${kotlin.version}</version>
+		</dependency>
+	</dependencies>
+</project>
