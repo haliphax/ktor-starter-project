@@ -1,48 +1,16 @@
+package com.haliphax.ktest.test
+
 // 3rd party
 import io.ktor.client.call.*
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
-import io.ktor.events.*
 import io.ktor.http.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.application.*
 import io.ktor.server.testing.*
 import kotlin.test.*
-import kotlinx.serialization.json.*
 // local
 import com.haliphax.ktest.data.*
+import com.haliphax.ktest.test.clients.*
 
-fun ApplicationTestBuilder.adminClient() = createClient {
-	install(Auth) {
-		basic {
-			realm = "Admin access"
-			credentials {
-				BasicAuthCredentials("admin", "password")
-			}
-		}
-	}
-}
-
-fun ApplicationTestBuilder.basicClient() = createClient {
-	install(Auth) {
-		basic {
-			realm = "Basic access"
-			credentials {
-				BasicAuthCredentials("user", "password")
-			}
-		}
-	}
-}
-
-fun ApplicationTestBuilder.jsonClient() = createClient {
-	install(ContentNegotiation) {
-		json()
-	}
-}
-
-class AppTest {
+class TestApp {
 	@Test
 	fun testAuthBadAdmin() = testApplication {
 		var response = client.get("/admin")
