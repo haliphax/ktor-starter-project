@@ -40,5 +40,5 @@ jobs:
         git stash
         git checkout -b gh-pages --track origin/gh-pages
         git stash pop
-        git commit -m "$(echo -e "📝 test results for $REV\nhttps://haliphax.github.io/ktest/$REV")"
+        git commit -m "$(echo -e "📝 test coverage for $REV\nhttps://haliphax.github.io/ktest/$REV")"
         git push -u origin gh-pages
