@@ -1,6 +1,7 @@
 plugins {
 	id 'application'
 	id 'com.github.johnrengelman.shadow' version '7.1.2'
+	id 'jacoco'
 	id 'org.jetbrains.kotlin.jvm' version "$kotlin_version"
 	id 'org.jetbrains.kotlin.plugin.serialization' version "$kotlin_version"
 }
