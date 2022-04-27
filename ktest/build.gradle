@@ -35,3 +35,15 @@ jar {
 		)
 	}
 }
+
+task libsMain(type: Sync) {
+	from configurations.compileClasspath
+	from configurations.runtimeClasspath
+	into "$buildDir/libs-main"
+}
+
+task libsTest(type: Sync) {
+	from configurations.testCompileClasspath - configurations.compileClasspath
+	from configurations.testRuntimeClasspath - configurations.runtimeClasspath
+	into "$buildDir/libs-test"
+}
