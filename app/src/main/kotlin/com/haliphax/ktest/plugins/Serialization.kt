@@ -1,8 +1,7 @@
 package com.haliphax.ktest.plugins
 
-// stdlib
-import kotlinx.serialization.json.*
 // 3rd party
+import kotlinx.serialization.json.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.plugins.contentnegotiation.*

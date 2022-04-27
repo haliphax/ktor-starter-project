@@ -1,8 +1,7 @@
 package com.haliphax.ktest.plugins
 
-// stdlib
-import kotlinx.serialization.*
 // 3rd party
+import kotlinx.serialization.*
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
