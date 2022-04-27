@@ -10,6 +10,7 @@ import com.haliphax.ktest.plugins.*
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
+	configureAuth()
 	configureRouting()
 	configureSerialization()
 }
