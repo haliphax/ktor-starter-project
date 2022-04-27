@@ -1,5 +1,3 @@
-// stdlib
-import kotlin.test.*
 // 3rd party
 import io.ktor.client.*
 import io.ktor.client.call.*
@@ -11,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.testing.*
+import kotlin.test.*
 import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
