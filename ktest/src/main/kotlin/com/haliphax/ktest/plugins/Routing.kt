@@ -8,7 +8,8 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-@Serializable data class Testing(val hello: Boolean)
+@Serializable
+data class Testing(val hello: Boolean)
 
 fun Application.configureRouting() {
 	routing {
