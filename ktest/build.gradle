@@ -40,6 +40,14 @@ jar {
 	}
 }
 
+test {
+	finalizedBy jacocoTestReport
+}
+
+jacocoTestReport {
+	dependsOn test
+}
+
 task libsMain(type: Sync) {
 	from configurations.compileClasspath
 	from configurations.runtimeClasspath
