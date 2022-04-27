@@ -33,11 +33,12 @@ jobs:
         export REV=$(git rev-parse --short HEAD)
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
-        git fetch
-        git checkout -b gh-pages --track origin/gh-pages
-        git merge master --allow-unrelated-histories
         [ -d docs ] || mkdir docs
         mv ktest/build/reports/jacoco/test/html docs/$REV
+        git fetch
         git add -f docs
-        git commit -m "📝 test results for $REV"
-        git push
+        git stash
+        git checkout -b gh-pages --track origin/gh-pages
+        git stash pop
+        git commit -m "$(echo -e "📝 test results for $REV\nhttps://haliphax.github.io/ktest/$REV")"
+        git push -u origin gh-pages
