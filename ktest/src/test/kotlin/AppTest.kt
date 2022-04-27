@@ -14,7 +14,7 @@ import kotlinx.coroutines.*
 import kotlinx.serialization.*
 import kotlinx.serialization.json.*
 // local
-import com.haliphax.ktest.plugins.Testing
+import com.haliphax.ktest.data.*
 
 class ApplicationTest {
 	@Test
@@ -24,7 +24,7 @@ class ApplicationTest {
 				json()
 			}
 		}
-		val response: Testing = client.get("/").body()
+		val response: TestData = client.get("/").body()
 		assertEquals(response.hello, true)
 	}
 }
