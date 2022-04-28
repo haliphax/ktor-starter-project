@@ -43,7 +43,7 @@ jobs:
 
         # reuse static assets (css, js, images)
         [ -d docs/static ] || mkdir -p docs/static
-        mv ktest/build/reports/tests/{css,js} docs/static
+        mv ktest/build/reports/tests/test/{css,js} docs/static
         mv ktest/build/reports/jacoco/test/html/jacoco-resources docs/static
 
         # copy reports to rev folder
