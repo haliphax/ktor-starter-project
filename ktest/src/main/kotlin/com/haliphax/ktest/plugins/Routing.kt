@@ -32,5 +32,10 @@ fun Application.configureRouting() {
 			val obj = TestData(hello = true)
 			call.respond(obj)
 		}
+
+		post("/data") {
+			val obj: TestData = call.receive()
+			call.respond(obj)
+		}
 	}
 }

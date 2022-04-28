@@ -46,9 +46,19 @@ class TestApp {
 	}
 
 	@Test
-	fun testData() = testApplication {
+	fun testDataGet() = testApplication {
 		var client = jsonClient()
 		val response: TestData = client.get("/data").body()
 		assertEquals(response.hello, true)
+	}
+
+	@Test
+	fun testDataPost() = testApplication {
+		val client = jsonClient()
+		val response: TestData = client.post("/data") {
+			contentType(ContentType.Application.Json)
+			setBody(TestData(hello = false))
+		}.body()
+		assertEquals(response.hello, false)
 	}
 }
