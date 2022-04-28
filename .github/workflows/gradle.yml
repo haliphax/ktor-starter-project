@@ -30,16 +30,35 @@ jobs:
 
     - name: Add coverage report to Pages site
       run: |
+        # config
         export REV=$(git rev-parse --short HEAD)
         git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
+
+        # sync
         git fetch
         git checkout -b gh-pages --track origin/gh-pages
         git pull
+
+        # reuse static assets (css, js, images)
+        [ -d docs/static ] || mkdir -p docs/static
+        mv ktest/build/reports/tests/{css,js} docs/static
+        mv ktest/build/reports/jacoco/test/html/jacoco-resources docs/static
+
+        # copy reports to rev folder
         mv ktest/build/reports/tests/test docs/$REV
         mv ktest/build/reports/jacoco/test/html docs/$REV/coverage
+
+        # link static assets to rev folder
+        ln -s docs/static/css docs/$REV/css
+        ln -s docs/static/js docs/$REV/js
+        ln -s docs/static/jacoco-resources docs/$REV/coverage/jacoco-resources
+
+        # add link to coverage report in test report index
         sed -i -e 's/\/h1>/&<p><a href="coverage\/">Coverage report<\/a><\/p>/' docs/$REV/index.html
+
+        # commit and push
         git add -f docs
         git commit -m "$(echo -e "📝 test report for $REV\nhttps://haliphax.github.io/ktest/$REV")"
         git push -u origin gh-pages
