@@ -31,7 +31,8 @@ jobs:
     - name: Add reports to Pages site
       run: |
         # config
-        export REV=$(git rev-parse --short HEAD)
+        REV=$(git rev-parse --short HEAD)
+        CWD=$(realpath pwd)
         git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
@@ -42,7 +43,8 @@ jobs:
         git pull
 
         # reuse static assets (css, js, images)
-        [ -d docs/static ] || mkdir -p docs/static
+        [ -d docs/static ] && rm -rf docs/static
+        mkdir -p docs/static
         mv ktest/build/reports/tests/test/{css,js} docs/static
         mv ktest/build/reports/jacoco/test/html/jacoco-resources docs/static
 
@@ -51,9 +53,10 @@ jobs:
         mv ktest/build/reports/jacoco/test/html docs/$REV/coverage
 
         # link static assets to rev folder
-        ln -s docs/static/css docs/$REV/css
-        ln -s docs/static/js docs/$REV/js
-        ln -s docs/static/jacoco-resources docs/$REV/coverage/jacoco-resources
+        rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
+          | xargs sed -i -e 's/\(css\|js\)\//..\/static\/&/g'
+        rgrep -l -e '["/]jacoco-resources/' docs/$REV/coverage | grep '.html' \
+          | xargs sed -i -e 's/jacoco-resources\//..\/..\/static\/&/g'
 
         # add link to coverage report in test report index
         sed -i -e 's/\/h1>/&<p><a href="coverage\/">Coverage report<\/a><\/p>/' docs/$REV/index.html
