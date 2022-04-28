@@ -28,7 +28,7 @@ jobs:
       with:
         arguments: test
 
-    - name: Add coverage report to Pages site
+    - name: Add reports to Pages site
       run: |
         # config
         export REV=$(git rev-parse --short HEAD)
