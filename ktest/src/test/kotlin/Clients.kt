@@ -18,6 +18,17 @@ fun ApplicationTestBuilder.adminClient() = createClient {
 	}
 }
 
+fun ApplicationTestBuilder.badClient() = createClient {
+	install(Auth) {
+		basic {
+			realm = "No access"
+			credentials {
+				BasicAuthCredentials("bad", "bad")
+			}
+		}
+	}
+}
+
 fun ApplicationTestBuilder.basicClient() = createClient {
 	install(Auth) {
 		basic {

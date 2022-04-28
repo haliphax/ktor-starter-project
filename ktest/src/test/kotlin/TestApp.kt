@@ -13,13 +13,15 @@ import com.haliphax.ktest.test.clients.*
 class TestApp {
 	@Test
 	fun testAuthBadAdmin() = testApplication {
-		var response = client.get("/admin")
+		val client = badClient()
+		val response = client.get("/admin")
 		assertEquals(response.status, HttpStatusCode.Unauthorized)
 	}
 
 	@Test
 	fun testAuthBadBasic() = testApplication {
-		var response = client.get("/basic")
+		val client = badClient()
+		val response = client.get("/basic")
 		assertEquals(response.status, HttpStatusCode.Unauthorized)
 	}
 
@@ -35,6 +37,12 @@ class TestApp {
 		val client = basicClient()
 		val response = client.get("/basic")
 		assertEquals(response.status, HttpStatusCode.OK)
+	}
+
+	@Test
+	fun testAuthUnauthorized() = testApplication {
+		var response = client.get("/admin")
+		assertEquals(response.status, HttpStatusCode.Unauthorized)
 	}
 
 	@Test
