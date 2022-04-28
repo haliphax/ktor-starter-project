@@ -37,7 +37,9 @@ jobs:
         git fetch
         git checkout -b gh-pages --track origin/gh-pages
         git pull
-        mv ktest/build/reports/jacoco/test/html docs/$REV
+        mv ktest/build/reports/tests/test docs/$REV
+        mv ktest/build/reports/jacoco/test/html docs/$REV/coverage
+        sed -i -e 's/\/h1>/&<p><a href="coverage\/">Coverage report<\/a><\/p>/' docs/$REV/index.html
         git add -f docs
-        git commit -m "$(echo -e "📝 test coverage for $REV\nhttps://haliphax.github.io/ktest/$REV")"
+        git commit -m "$(echo -e "📝 test report for $REV\nhttps://haliphax.github.io/ktest/$REV")"
         git push -u origin gh-pages
