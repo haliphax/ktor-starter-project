@@ -31,14 +31,13 @@ jobs:
     - name: Add coverage report to Pages site
       run: |
         export REV=$(git rev-parse --short HEAD)
+        git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
-        [ -d docs ] || mkdir docs
-        mv ktest/build/reports/jacoco/test/html docs/$REV
         git fetch
-        git add -f docs
-        git stash
         git checkout -b gh-pages --track origin/gh-pages
-        git stash pop
+        git pull
+        mv ktest/build/reports/jacoco/test/html docs/$REV
+        git add -f docs
         git commit -m "$(echo -e "📝 test coverage for $REV\nhttps://haliphax.github.io/ktest/$REV")"
         git push -u origin gh-pages
