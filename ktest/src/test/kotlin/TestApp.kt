@@ -3,6 +3,7 @@ package com.haliphax.ktest.test
 // 3rd party
 import io.ktor.client.call.*
 import io.ktor.client.request.*
+import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import kotlin.test.*
@@ -11,6 +12,13 @@ import com.haliphax.ktest.data.*
 import com.haliphax.ktest.test.clients.*
 
 class TestApp {
+	@Test
+	fun testLoadHomepage() = testApplication {
+		val client = basicClient()
+		val response = client.get("/")
+		assertEquals(response.bodyAsText(), "Hello, world!")
+	}
+
 	@Test
 	fun testAuthBadAdmin() = testApplication {
 		val client = badClient()
