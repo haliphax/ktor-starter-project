@@ -1,15 +1,21 @@
 package com.haliphax.ktest.test
 
-// 3rd party
-import io.ktor.client.call.*
-import io.ktor.client.request.*
+import com.haliphax.ktest.data.TestData
+import com.haliphax.ktest.test.clients.adminClient
+import com.haliphax.ktest.test.clients.badClient
+import com.haliphax.ktest.test.clients.basicClient
+import com.haliphax.ktest.test.clients.jsonClient
+import io.ktor.client.call.body
+import io.ktor.client.request.get
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-import io.ktor.http.*
-import io.ktor.server.testing.*
-import kotlin.test.*
-// local
-import com.haliphax.ktest.data.*
-import com.haliphax.ktest.test.clients.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.contentType
+import io.ktor.server.testing.testApplication
+import kotlin.test.Test
+import kotlin.test.assertEquals
 
 class TestApp {
 	@Test
@@ -21,14 +27,14 @@ class TestApp {
 
 	@Test
 	fun testAuthBadAdmin() = testApplication {
-		val client = badClient()
+		val client = badClient("Admin access", "admin")
 		val response = client.get("/admin")
 		assertEquals(response.status, HttpStatusCode.Unauthorized)
 	}
 
 	@Test
 	fun testAuthBadBasic() = testApplication {
-		val client = badClient()
+		val client = badClient("Basic access", "user")
 		val response = client.get("/basic")
 		assertEquals(response.status, HttpStatusCode.Unauthorized)
 	}

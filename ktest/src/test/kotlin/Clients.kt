@@ -1,11 +1,11 @@
 package com.haliphax.ktest.test.clients
 
-// 3rd party
-import io.ktor.client.plugins.auth.*
-import io.ktor.client.plugins.auth.providers.*
-import io.ktor.client.plugins.contentnegotiation.*
-import io.ktor.serialization.kotlinx.json.*
-import io.ktor.server.testing.*
+import io.ktor.client.plugins.auth.Auth
+import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
+import io.ktor.client.plugins.auth.providers.basic
+import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
+import io.ktor.serialization.kotlinx.json.json
+import io.ktor.server.testing.ApplicationTestBuilder
 
 fun ApplicationTestBuilder.adminClient() = createClient {
 	install(Auth) {
@@ -18,16 +18,17 @@ fun ApplicationTestBuilder.adminClient() = createClient {
 	}
 }
 
-fun ApplicationTestBuilder.badClient() = createClient {
-	install(Auth) {
-		basic {
-			realm = "No access"
-			credentials {
-				BasicAuthCredentials("bad", "bad")
+fun ApplicationTestBuilder.badClient(authRealm: String = "No access", username: String = "bad") =
+	createClient {
+		install(Auth) {
+			basic {
+				realm = authRealm
+				credentials {
+					BasicAuthCredentials(username, "bad")
+				}
 			}
 		}
 	}
-}
 
 fun ApplicationTestBuilder.basicClient() = createClient {
 	install(Auth) {

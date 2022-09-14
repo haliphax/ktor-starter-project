@@ -1,7 +1,6 @@
 package com.haliphax.ktest.data
 
-// 3rd party
-import kotlinx.serialization.*
+import kotlinx.serialization.Serializable
 
 @Serializable
 data class TestData(val hello: Boolean)

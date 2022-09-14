@@ -1,16 +1,15 @@
 package com.haliphax.ktest
 
-// 3rd party
-import io.ktor.server.application.*
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
-// local
-import com.haliphax.ktest.plugins.*
+import com.haliphax.ktest.plugins.configureAuth
+import com.haliphax.ktest.plugins.configureRouting
+import com.haliphax.ktest.plugins.configureSerialization
+import io.ktor.server.application.Application
+import io.ktor.server.netty.EngineMain
 
 fun main(args: Array<String>) = EngineMain.main(args)
 
 fun Application.module() {
-	configureAuth()
-	configureRouting()
-	configureSerialization()
+  configureAuth()
+  configureRouting()
+  configureSerialization()
 }

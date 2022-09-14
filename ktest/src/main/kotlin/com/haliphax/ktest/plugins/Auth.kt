@@ -1,8 +1,10 @@
 package com.haliphax.ktest.plugins
 
-// 3rd party
-import io.ktor.server.auth.*
-import io.ktor.server.application.*
+import io.ktor.server.application.Application
+import io.ktor.server.application.install
+import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.UserIdPrincipal
+import io.ktor.server.auth.basic
 
 fun Application.configureAuth() {
 	install(Authentication) {
@@ -11,8 +13,7 @@ fun Application.configureAuth() {
 			validate { credentials ->
 				if (credentials.name != "user" || credentials.password != "password") {
 					null
-				}
-				else {
+				} else {
 					UserIdPrincipal(credentials.name)
 				}
 			}
@@ -21,11 +22,9 @@ fun Application.configureAuth() {
 		basic("auth-admin") {
 			realm = "Admin access"
 			validate { credentials ->
-				if (credentials.name != "admin" || credentials.password != "password")
-				{
+				if (credentials.name != "admin" || credentials.password != "password") {
 					null
-				}
-				else {
+				} else {
 					UserIdPrincipal(credentials.name)
 				}
 			}
