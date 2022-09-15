@@ -1,4 +1,4 @@
-package com.haliphax.ktest.plugins
+package com.haliphax.ktorStarterProject.plugins
 
 import io.ktor.server.application.Application
 import io.ktor.server.application.install

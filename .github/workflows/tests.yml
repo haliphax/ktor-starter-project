@@ -66,12 +66,12 @@ jobs:
         # reuse static assets (css, js, images)
         [ -d docs/static ] && rm -rf docs/static
         mkdir -p docs/static
-        mv ktest/build/reports/tests/test/{css,js} docs/static
-        mv ktest/build/reports/jacoco/test/html/jacoco-resources docs/static
+        mv project/build/reports/tests/test/{css,js} docs/static
+        mv project/build/reports/jacoco/test/html/jacoco-resources docs/static
 
         # copy reports to rev folder
-        mv ktest/build/reports/tests/test docs/$REV
-        mv ktest/build/reports/jacoco/test/html docs/$REV/coverage
+        mv project/build/reports/tests/test docs/$REV
+        mv project/build/reports/jacoco/test/html docs/$REV/coverage
 
         # link static assets to rev folder
         rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
@@ -84,5 +84,5 @@ jobs:
 
         # commit and push
         git add -f docs
-        git commit -m "$(echo -e "📝 test report for $REV\nhttps://haliphax.github.io/ktest/$REV")"
+        git commit -m "$(echo -e "📝 test report for $REV\nhttps://haliphax.github.io/ktor-starter-project/$REV")"
         git push -u origin gh-pages

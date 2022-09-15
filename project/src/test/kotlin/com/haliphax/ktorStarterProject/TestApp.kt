@@ -1,10 +1,10 @@
-package com.haliphax.ktest.test
+package com.haliphax.ktorStarterProject.test
 
-import com.haliphax.ktest.data.TestData
-import com.haliphax.ktest.test.clients.adminClient
-import com.haliphax.ktest.test.clients.badClient
-import com.haliphax.ktest.test.clients.basicClient
-import com.haliphax.ktest.test.clients.jsonClient
+import com.haliphax.ktorStarterProject.data.TestData
+import com.haliphax.ktorStarterProject.test.clients.adminClient
+import com.haliphax.ktorStarterProject.test.clients.badClient
+import com.haliphax.ktorStarterProject.test.clients.basicClient
+import com.haliphax.ktorStarterProject.test.clients.jsonClient
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe

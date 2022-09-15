@@ -56,4 +56,4 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "root"
-include("ktest")
+include("project")

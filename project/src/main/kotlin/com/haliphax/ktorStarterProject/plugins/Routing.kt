@@ -1,6 +1,6 @@
-package com.haliphax.ktest.plugins
+package com.haliphax.ktorStarterProject.plugins
 
-import com.haliphax.ktest.data.TestData
+import com.haliphax.ktorStarterProject.data.TestData
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate

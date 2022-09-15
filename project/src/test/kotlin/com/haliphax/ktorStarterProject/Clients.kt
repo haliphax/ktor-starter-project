@@ -1,4 +1,4 @@
-package com.haliphax.ktest.test.clients
+package com.haliphax.ktorStarterProject.test.clients
 
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials

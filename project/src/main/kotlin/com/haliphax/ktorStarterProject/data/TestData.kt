@@ -1,4 +1,4 @@
-package com.haliphax.ktest.data
+package com.haliphax.ktorStarterProject.data
 
 import kotlinx.serialization.Serializable
 
