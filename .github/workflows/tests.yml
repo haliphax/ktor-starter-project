@@ -31,7 +31,7 @@ jobs:
 
   lint:
     needs: changes
-    if: ${{ needs.changes.outputs.src == 'true' }}
+    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
     steps:
 
@@ -51,7 +51,7 @@ jobs:
 
   test:
     needs: [changes, lint]
-    if: ${{ needs.changes.outputs.src == 'true' }}
+    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
     steps:
 
