@@ -28,6 +28,7 @@ jobs:
             - '**/*.kts'
             - '**/*.properties'
             - '**/resources/*.xml'
+            - 'gradle*'
 
   lint:
     needs: changes
