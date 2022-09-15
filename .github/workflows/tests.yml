@@ -7,12 +7,18 @@ on:
 
   pull_request:
     branches: [ master ]
+    paths:
+    - "**/*.kt"
+    - "**/*.kts"
+    - "**/*.properties"
+    - "**/resources/*"
 
   workflow_dispatch:
 
 jobs:
 
   lint:
+    if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     steps:
 
@@ -31,6 +37,7 @@ jobs:
         arguments: ktlintcheck
 
   test:
+    if: github.ref != 'refs/heads/master'
     runs-on: ubuntu-latest
     needs: lint
     steps:
