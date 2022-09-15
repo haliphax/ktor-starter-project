@@ -80,7 +80,7 @@ jobs:
           | xargs sed -i -e 's/jacoco-resources\//..\/..\/static\/&/g'
 
         # add link to coverage report in test report index
-        sed -i -e 's/\/h1>/&<p><a href="coverage\/">Coverage report<\/a><\/p>/' docs/$REV/index.html
+        sed -i -e 's/<a href="#tab1">Classes<\/a>/&<\/li><li><a href="coverage\/">Coverage report<\/a>/' docs/$REV/index.html
 
         # commit and push
         git add -f docs
