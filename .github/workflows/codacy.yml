@@ -45,6 +45,7 @@ jobs:
             - '**/*.kts'
             - '**/*.properties'
             - '**/resources/*.xml'
+            - 'gradle*'
 
   codacy-security-scan:
     needs: changes
