@@ -5,20 +5,19 @@ import com.haliphax.ktest.test.clients.adminClient
 import com.haliphax.ktest.test.clients.badClient
 import com.haliphax.ktest.test.clients.basicClient
 import com.haliphax.ktest.test.clients.jsonClient
+import io.kotest.assertions.throwables.shouldThrowAny
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.shouldBe
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-import io.ktor.client.HttpClient
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.testing.testApplication
-import io.kotest.core.spec.style.DescribeSpec
-import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
-import io.kotest.assertions.throwables.shouldThrowAny
 
 class TestApp : DescribeSpec({
 	describe("application") {

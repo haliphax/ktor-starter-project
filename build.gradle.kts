@@ -42,7 +42,7 @@ allprojects {
 		useJUnitPlatform()
 		testLogging.showStandardStreams = true
 
-    testLogging {
+		testLogging {
 			showCauses = true
 			showStackTraces = true
 			showStandardStreams = true
@@ -52,7 +52,7 @@ allprojects {
 				TestLogEvent.SKIPPED
 			)
 			exceptionFormat = TestExceptionFormat.FULL
-    }
+		}
 	}
 }
 
