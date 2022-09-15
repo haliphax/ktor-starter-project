@@ -19,6 +19,9 @@ jobs:
       src: ${{ steps.changes.outputs.src }}
     steps:
 
+    - name: Check out repository
+      uses: actions/checkout@v3
+
     - uses: dorny/paths-filter@v2
       id: changes
       with:
