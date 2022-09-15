@@ -2,21 +2,28 @@ enableFeaturePreview("VERSION_CATALOGS")
 
 pluginManagement {
 	val kotlin_version: String by settings
-	val logback_version: String by settings
 
 	plugins {
-		id("com.github.johnrengelman.shadow") version "7.1.2"
-		id("org.jetbrains.kotlin.jvm") version "$kotlin_version"
-		id("org.jetbrains.kotlin.plugin.serialization") version "$kotlin_version"
+		id("com.github.johnrengelman.shadow").version("7.1.2")
+		id("org.jetbrains.kotlin.jvm").version(kotlin_version)
+		id("org.jetbrains.kotlin.plugin.serialization").version(kotlin_version)
+		id("org.jlleitschuh.gradle.ktlint").version("11.0.0")
 	}
 }
 
 dependencyResolutionManagement {
+	val coroutines_version: String by settings
 	val kotlin_version: String by settings
+	val kotest_version: String by settings
 	val ktor_version: String by settings
 	val logback_version: String by settings
 
 	versionCatalogs {
+		create("coroutines") {
+			library("core", "org.jetbrains.kotlinx", "kotlinx-coroutines-core").version(coroutines_version)
+			library("core-jvm", "org.jetbrains.kotlinx", "kotlinx-coroutines-core-jvm").version(coroutines_version)
+			bundle("core", listOf("core", "core-jvm"))
+		}
 		create("basic") {
 			library("kotlin", "org.jetbrains.kotlin", "kotlin-bom").version(kotlin_version)
 			library("kotlinx-s18n-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json").version("1.3.2")
@@ -40,7 +47,10 @@ dependencyResolutionManagement {
 		create("test") {
 			library("server-host", "io.ktor", "ktor-server-test-host").version(ktor_version)
 			library("kotlin-test", "org.jetbrains.kotlin", "kotlin-test").version(kotlin_version)
-			bundle("all", listOf("server-host", "kotlin-test"))
+			library("kotest-assertion", "io.kotest", "kotest-assertions-core").version(kotest_version)
+			library("kotest-runner", "io.kotest", "kotest-runner-junit5-jvm").version(kotest_version)
+			library("mockk", "io.mockk", "mockk").version("1.12.7")
+			bundle("all", listOf("server-host", "kotest-assertion", "kotest-runner", "mockk"))
 		}
 	}
 }

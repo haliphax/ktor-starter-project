@@ -5,7 +5,9 @@ plugins {
 dependencies {
 	implementation(basic.bundles.all)
 	implementation(server.bundles.all)
+
 	testImplementation(client.bundles.all)
+	testImplementation(coroutines.bundles.core)
 	testImplementation(test.bundles.all)
 }
 
@@ -17,12 +19,4 @@ tasks.jar {
 	manifest {
 		attributes(mapOf("Main-Class" to "io.ktor.server.netty.EngineMain"))
 	}
-}
-
-tasks.test {
-	finalizedBy(tasks.jacocoTestReport)
-}
-
-tasks.jacocoTestReport {
-	dependsOn(tasks.test)
 }

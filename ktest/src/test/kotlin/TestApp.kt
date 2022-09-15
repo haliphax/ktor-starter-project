@@ -10,69 +10,119 @@ import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.client.HttpClient
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.testing.testApplication
-import kotlin.test.Test
-import kotlin.test.assertEquals
+import io.kotest.core.spec.style.DescribeSpec
+import io.kotest.matchers.shouldBe
+import kotlinx.coroutines.runBlocking
+import io.kotest.assertions.throwables.shouldThrowAny
 
-class TestApp {
-	@Test
-	fun testLoadHomepage() = testApplication {
-		val client = basicClient()
-		val response = client.get("/")
-		assertEquals(response.bodyAsText(), "Hello, world!")
-	}
+class TestApp : DescribeSpec({
+	describe("application") {
+		it("should serve the homepage") {
+			testApplication {
+				val client = basicClient()
+				val response = client.get("/")
 
-	@Test
-	fun testAuthBadAdmin() = testApplication {
-		val client = badClient("Admin access", "admin")
-		val response = client.get("/admin")
-		assertEquals(response.status, HttpStatusCode.Unauthorized)
-	}
+				response.bodyAsText() shouldBe "Hello, world!"
+			}
+		}
 
-	@Test
-	fun testAuthBadBasic() = testApplication {
-		val client = badClient("Basic access", "user")
-		val response = client.get("/basic")
-		assertEquals(response.status, HttpStatusCode.Unauthorized)
-	}
+		describe("/admin endpoint") {
+			it("should refuse access given bad credentials") {
+				testApplication {
+					val client = badClient("Admin access", "admin")
+					val response = client.get("/admin")
 
-	@Test
-	fun testAuthGoodAdmin() = testApplication {
-		val client = adminClient()
-		val response = client.get("/admin")
-		assertEquals(response.status, HttpStatusCode.OK)
-	}
+					response.status shouldBe HttpStatusCode.Unauthorized
+				}
+			}
 
-	@Test
-	fun testAuthGoodBasic() = testApplication {
-		val client = basicClient()
-		val response = client.get("/basic")
-		assertEquals(response.status, HttpStatusCode.OK)
-	}
+			it("should refuse access given no credentials") {
+				testApplication {
+					val response = client.get("/admin")
 
-	@Test
-	fun testAuthUnauthorized() = testApplication {
-		var response = client.get("/admin")
-		assertEquals(response.status, HttpStatusCode.Unauthorized)
-	}
+					response.status shouldBe HttpStatusCode.Unauthorized
+				}
+			}
 
-	@Test
-	fun testDataGet() = testApplication {
-		var client = jsonClient()
-		val response: TestData = client.get("/data").body()
-		assertEquals(response.hello, true)
-	}
+			it("should permit access given good credentials") {
+				testApplication {
+					val client = adminClient()
+					val response = client.get("/admin")
 
-	@Test
-	fun testDataPost() = testApplication {
-		val client = jsonClient()
-		val response: TestData = client.post("/data") {
-			contentType(ContentType.Application.Json)
-			setBody(TestData(hello = false))
-		}.body()
-		assertEquals(response.hello, false)
+					response.status shouldBe HttpStatusCode.OK
+				}
+			}
+		}
+
+		describe("/basic endpoint") {
+			it("should refuse access given bad credentials") {
+				testApplication {
+					val client = badClient("Basic access", "user")
+					val response = client.get("/basic")
+
+					response.status shouldBe HttpStatusCode.Unauthorized
+				}
+			}
+
+			it("should refuse access given no credentials") {
+				testApplication {
+					val response = client.get("/basic")
+
+					response.status shouldBe HttpStatusCode.Unauthorized
+				}
+			}
+
+			it("should permit access given good credentials") {
+				testApplication {
+					val client = basicClient()
+					val response = client.get("/basic")
+
+					response.status shouldBe HttpStatusCode.OK
+				}
+			}
+		}
+
+		describe("/data endpoint") {
+			it("should return expected JSON data") {
+				testApplication {
+					val client = jsonClient()
+					val response: TestData = client.get("/data").body()
+
+					response.hello shouldBe true
+				}
+			}
+
+			it("should accept valid JSON data") {
+				testApplication {
+					val client = jsonClient()
+					val response: TestData = client.post("/data") {
+						contentType(ContentType.Application.Json)
+						setBody(TestData(hello = false))
+					}.body()
+
+					response.hello shouldBe false
+				}
+			}
+
+			it("should refuse invalid JSON data") {
+				testApplication {
+					val client = jsonClient()
+
+					shouldThrowAny {
+						runBlocking {
+							client.post("/data") {
+								contentType(ContentType.Application.Json)
+								setBody("{\"badprop\":\"1\"}")
+							}
+						}
+					}
+				}
+			}
+		}
 	}
-}
+})

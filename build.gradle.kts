@@ -1,11 +1,12 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val kotlin_version: String by project
-
 plugins {
+	jacoco
 	java
 	id("com.github.johnrengelman.shadow") apply false
-	id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+	id("org.jlleitschuh.gradle.ktlint")
 	id("org.jetbrains.kotlin.jvm")
 	id("org.jetbrains.kotlin.plugin.serialization") apply false
 }
@@ -25,8 +26,33 @@ allprojects {
 		sourceCompatibility = JavaVersion.VERSION_17
 	}
 
+	tasks.test {
+		finalizedBy(tasks.jacocoTestReport)
+	}
+
+	tasks.jacocoTestReport {
+		dependsOn(tasks.test)
+	}
+
 	tasks.withType<KotlinCompile> {
 		kotlinOptions.jvmTarget = "1.8"
+	}
+
+	tasks.withType<Test> {
+		useJUnitPlatform()
+		testLogging.showStandardStreams = true
+
+    testLogging {
+			showCauses = true
+			showStackTraces = true
+			showStandardStreams = true
+			events(
+				TestLogEvent.PASSED,
+				TestLogEvent.FAILED,
+				TestLogEvent.SKIPPED
+			)
+			exceptionFormat = TestExceptionFormat.FULL
+    }
 	}
 }
 
