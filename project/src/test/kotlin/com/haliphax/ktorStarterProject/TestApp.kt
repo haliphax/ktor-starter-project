@@ -1,10 +1,6 @@
-package com.haliphax.ktorStarterProject.test
+package com.haliphax.ktorStarterProject
 
 import com.haliphax.ktorStarterProject.data.TestData
-import com.haliphax.ktorStarterProject.test.clients.adminClient
-import com.haliphax.ktorStarterProject.test.clients.badClient
-import com.haliphax.ktorStarterProject.test.clients.basicClient
-import com.haliphax.ktorStarterProject.test.clients.jsonClient
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -33,7 +29,7 @@ class TestApp : DescribeSpec({
 		describe("/admin endpoint") {
 			it("should refuse access given bad credentials") {
 				testApplication {
-					val client = badClient("Admin access", "admin")
+					val client = badClient("admin")
 					val response = client.get("/admin")
 
 					response.status shouldBe HttpStatusCode.Unauthorized
@@ -61,7 +57,7 @@ class TestApp : DescribeSpec({
 		describe("/basic endpoint") {
 			it("should refuse access given bad credentials") {
 				testApplication {
-					val client = badClient("Basic access", "user")
+					val client = badClient("user")
 					val response = client.get("/basic")
 
 					response.status shouldBe HttpStatusCode.Unauthorized
@@ -76,7 +72,16 @@ class TestApp : DescribeSpec({
 				}
 			}
 
-			it("should permit access given good credentials") {
+			it("should permit access given admin credentials") {
+				testApplication {
+					val client = adminClient()
+					val response = client.get("/basic")
+
+					response.status shouldBe HttpStatusCode.OK
+				}
+			}
+
+			it("should permit access given basic credentials") {
 				testApplication {
 					val client = basicClient()
 					val response = client.get("/basic")
