@@ -5,7 +5,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
 	id("com.github.johnrengelman.shadow") apply false
 	id("org.jetbrains.kotlin.jvm")
-	id("org.jetbrains.kotlin.plugin.serialization") apply false
+	id("org.jetbrains.kotlin.plugin.serialization")
 	id("org.jlleitschuh.gradle.ktlint")
 	jacoco
 	java
@@ -13,28 +13,47 @@ plugins {
 
 allprojects {
 	apply(plugin = "jacoco")
-	apply(plugin = "java")
 	apply(plugin = "org.jetbrains.kotlin.jvm")
+	apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 	apply(plugin = "org.jlleitschuh.gradle.ktlint")
-
-	repositories {
-		mavenCentral()
-	}
+	apply(plugin = "java")
 
 	java {
 		sourceCompatibility = JavaVersion.VERSION_17
 	}
 
-	tasks.withType<KotlinCompile> {
-		kotlinOptions.jvmTarget = "1.8"
+	repositories {
+		mavenCentral()
+	}
+
+	tasks.jacocoTestReport {
+		dependsOn(tasks.test)
+	}
+
+	afterEvaluate {
+		tasks.jacocoTestReport {
+			classDirectories.setFrom(
+				files(
+					classDirectories.files.map {
+						fileTree(it) { exclude("**/*$*$*.class") }
+					}
+				)
+			)
+		}
 	}
 
 	tasks.test {
 		finalizedBy(tasks.jacocoTestReport)
 	}
 
-	tasks.jacocoTestReport {
-		dependsOn(tasks.test)
+	// enable reproducible builds
+	tasks.withType<AbstractArchiveTask> {
+		isPreserveFileTimestamps = false
+		isReproducibleFileOrder = true
+	}
+
+	tasks.withType<KotlinCompile> {
+		kotlinOptions.jvmTarget = "1.8"
 	}
 
 	tasks.withType<Test> {
@@ -57,11 +76,8 @@ allprojects {
 subprojects {
 	apply(plugin = "application")
 	apply(plugin = "com.github.johnrengelman.shadow")
-	apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
 
-	// enable reproducible builds
-	tasks.withType<AbstractArchiveTask> {
-		isPreserveFileTimestamps = false
-		isReproducibleFileOrder = true
+	tasks.build {
+		dependsOn(tasks.findByName("shadowJar"))
 	}
 }
