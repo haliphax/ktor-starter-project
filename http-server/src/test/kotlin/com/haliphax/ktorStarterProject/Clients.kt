@@ -1,4 +1,4 @@
-package com.haliphax.ktorStarterProject.test.clients
+package com.haliphax.ktorStarterProject
 
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials
@@ -10,7 +10,6 @@ import io.ktor.server.testing.ApplicationTestBuilder
 fun ApplicationTestBuilder.adminClient() = createClient {
 	install(Auth) {
 		basic {
-			realm = "Admin access"
 			credentials {
 				BasicAuthCredentials("admin", "password")
 			}
@@ -18,22 +17,19 @@ fun ApplicationTestBuilder.adminClient() = createClient {
 	}
 }
 
-fun ApplicationTestBuilder.badClient(authRealm: String = "No access", username: String = "bad") =
-	createClient {
-		install(Auth) {
-			basic {
-				realm = authRealm
-				credentials {
-					BasicAuthCredentials(username, "bad")
-				}
+fun ApplicationTestBuilder.badClient(username: String = "bad") = createClient {
+	install(Auth) {
+		basic {
+			credentials {
+				BasicAuthCredentials(username, "bad")
 			}
 		}
 	}
+}
 
 fun ApplicationTestBuilder.basicClient() = createClient {
 	install(Auth) {
 		basic {
-			realm = "Basic access"
 			credentials {
 				BasicAuthCredentials("user", "password")
 			}

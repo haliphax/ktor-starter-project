@@ -19,7 +19,7 @@ fun Application.configureRouting() {
 			}
 		}
 
-		authenticate("auth-basic") {
+		authenticate("auth-admin", "auth-basic") {
 			get("/basic") {
 				call.respondText("Authorized")
 			}

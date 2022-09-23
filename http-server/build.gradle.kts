@@ -1,7 +1,3 @@
-plugins {
-	id("com.github.johnrengelman.shadow")
-}
-
 dependencies {
 	implementation(basic.bundles.all)
 	implementation(server.bundles.all)
