@@ -90,12 +90,12 @@ jobs:
         # reuse static assets (css, js, images)
         [ -d docs/static ] && rm -rf docs/static
         mkdir -p docs/static
-        mv project/build/reports/tests/test/{css,js} docs/static
-        mv project/build/reports/jacoco/test/html/jacoco-resources docs/static
+        mv http-server/build/reports/tests/test/{css,js} docs/static
+        mv http-server/build/reports/jacoco/test/html/jacoco-resources docs/static
 
         # copy reports to rev folder
-        mv project/build/reports/tests/test docs/$REV
-        mv project/build/reports/jacoco/test/html docs/$REV/coverage
+        mv http-server/build/reports/tests/test docs/$REV
+        mv http-server/build/reports/jacoco/test/html docs/$REV/coverage
 
         # link static assets to rev folder
         rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
