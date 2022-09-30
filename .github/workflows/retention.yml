@@ -30,13 +30,16 @@ jobs:
     - name: Remove old coverage reports
       run: |
         git fetch --depth 1 origin master:master
+        git checkout gh-pages
         threshold=$(($(date +%s) - (86400 * 30)))  # 30 days
         latest="$(git rev-parse --short master)"
         dirs="$(find docs/* -maxdepth 0 -type d | grep -vE "static|index")"
         dirs=(${dirs//$'\n'/ })
+        echo "directories: $dirs"
 
         for x in ${dirs[@]}; do
           age="$(git log --format="%at" -- "$x")"
+          echo "$x - age is $age"
 
           if [[ $age < $threshold ]]; then
             if [[ "$x" == "docs/$latest" ]]; then
@@ -50,4 +53,4 @@ jobs:
 
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
-        git push -f origin gh-pages
+        git push -f -u origin gh-pages:gh-pages
