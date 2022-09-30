@@ -15,7 +15,7 @@ import io.ktor.http.contentType
 import io.ktor.server.testing.testApplication
 import kotlinx.coroutines.runBlocking
 
-class AppTest : DescribeSpec({
+class ModuleTest : DescribeSpec({
 	describe("application") {
 		it("should serve the homepage") {
 			testApplication {

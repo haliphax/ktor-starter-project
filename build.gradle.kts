@@ -35,7 +35,12 @@ allprojects {
 			classDirectories.setFrom(
 				files(
 					classDirectories.files.map {
-						fileTree(it) { exclude("**/*$*$*.class") }
+						fileTree(it) {
+							exclude(
+								"**/*$*$*.class",
+								"**/com/haliphax/ktorStarterProject/MainKt.class"
+							)
+						}
 					}
 				)
 			)
