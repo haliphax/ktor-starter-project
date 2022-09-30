@@ -1,4 +1,4 @@
-package com.haliphax.ktorStarterProject.plugins
+package com.haliphax.ktorStarterProject.modules.core
 
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
