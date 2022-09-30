@@ -1,0 +1,46 @@
+name: Retention
+
+on:
+
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+
+jobs:
+
+  retention:
+    name: Coverage reports retention
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out repository
+      uses: actions/checkout@v3
+      with:
+        branch: gh-pages
+
+    - name: Set up Python v3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.10
+
+    - name: Install dependencies
+      run: pip install git-filter-repo
+
+    - name: Remove old coverage reports
+      run: |
+        reports="$(ls -1t docs | grep -vE "static|index")"
+        latest="$(echo "$reports" | head -n 1)"
+        oldest="$(echo "$reports" | tail -n 10)"
+        oldest=(${oldest//$'\n'/ })
+
+        for x in ${oldest[@]}; do
+          if [[ "$x" == "$latest" ]]; then
+            echo "$x - latest report, skipping"
+          else
+            echo "$x - purging from history"
+            git-filter-repo --invert-paths --path "docs/$x"
+          fi
+        done
+
+        git push -u origin gh-pages -f
