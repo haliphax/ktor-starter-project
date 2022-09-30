@@ -13,7 +13,7 @@ on:
 jobs:
 
   changes:
-    name: Check for changes to source code files
+    name: Change detection
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.changes.outputs.src }}
@@ -34,6 +34,7 @@ jobs:
             - 'gradle*'
 
   lint:
+    name: Linter
     needs: changes
     if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
@@ -54,8 +55,9 @@ jobs:
         arguments: ktlintcheck
 
   test:
-    needs: [changes, lint]
-    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
+    name: Unit tests
+    needs: changes
+    if: ${{ needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
     steps:
 
@@ -75,6 +77,9 @@ jobs:
 
     - name: Add reports to Pages site
       run: |
+        # only run on master branch (merge)
+        [[ "$(git branch --show-current)" == "master" ]] || exit 0
+
         # config
         REV=$(git rev-parse --short HEAD)
         CWD=$(realpath pwd)
