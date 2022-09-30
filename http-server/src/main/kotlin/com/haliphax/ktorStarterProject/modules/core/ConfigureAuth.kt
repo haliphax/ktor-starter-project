@@ -1,4 +1,4 @@
-package com.haliphax.ktorStarterProject.plugins
+package com.haliphax.ktorStarterProject.modules.core
 
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
