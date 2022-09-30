@@ -9,7 +9,7 @@ on:
 
 jobs:
 
-  null:
+  none:
     runs-on: ubuntu-latest
     steps:
 
