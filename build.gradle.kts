@@ -27,6 +27,10 @@ allprojects {
 	}
 
 	tasks.jacocoTestReport {
+		reports {
+			xml.required.set(true)
+		}
+
 		dependsOn(tasks.test)
 	}
 

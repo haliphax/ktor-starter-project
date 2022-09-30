@@ -43,16 +43,14 @@ jobs:
     - name: Check out repository
       uses: actions/checkout@v3
 
-    - name: Set up Eclipse Java 17
-      uses: actions/setup-java@v3
+    - uses: musichin/ktlint-check@v2
       with:
-        distribution: temurin
-        java-version: 17
-
-    - name: Run ktlint check
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: ktlintcheck
+        ktlint-version: '0.47.1'
+        relative: true
+        experimental: true
+        patterns: |
+          **/**.kt
+          !**/generated/**
 
   test:
     name: Unit tests
@@ -75,6 +73,14 @@ jobs:
       with:
         arguments: test
 
+    - name: Add coverage to PR
+      uses: madrapps/jacoco-report@v1.3
+      with:
+        paths: ${{ github.workspace }}/http-server/build/reports/jacoco/test/jacocoTestReport.xml
+        token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
+        min-coverage-overall: 80
+        min-coverage-changed-files: 80
+
     - name: Add reports to Pages site
       run: |
         # only run on master branch (merge)
@@ -82,7 +88,6 @@ jobs:
 
         # config
         REV=$(git rev-parse --short HEAD)
-        CWD=$(realpath pwd)
         git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
