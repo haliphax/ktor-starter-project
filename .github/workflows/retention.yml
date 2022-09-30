@@ -1,0 +1,53 @@
+name: Retention
+
+on:
+
+  workflow_dispatch:
+
+  push:
+    branches: [ gh-pages ]
+
+jobs:
+
+  retention:
+    name: Coverage reports retention
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Check out repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python v3.10
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install dependencies
+      run: pip install git-filter-repo
+
+    - name: Remove old coverage reports
+      run: |
+        git fetch --depth 1 origin master:master
+        latest="$(git rev-parse --short master)"
+        dirs="$(find docs/* -maxdepth 0 -type d | grep -vE "static|index")"
+        dirs=(${dirs//$'\n'/ })
+        threshold=$(($(date +%s) - (86400 * 30)))  # 30 days
+        echo "threshold: $threshold"
+
+        for x in ${dirs[@]}; do
+          age="$(git log --format="%at" -- "$x")"
+          echo "$x - age: $age"
+
+          if [[ $age < $threshold ]]; then
+            if [[ "$x" == "docs/$latest" ]]; then
+              echo "$x - latest report, skipping"
+            else
+              echo "$x - purging from history"
+              git-filter-repo --invert-paths --path "$x" > /dev/null
+            fi
+          fi
+        done
+
+        git config user.email git@github.com
+        git config user.name 'GitHub Actions'
+        git push -f -u origin gh-pages:gh-pages
