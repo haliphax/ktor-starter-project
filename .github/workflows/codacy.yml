@@ -30,7 +30,7 @@ permissions:
 jobs:
 
   changes:
-    name: Check for changes to source code files
+    name: Change detection
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.changes.outputs.src }}
