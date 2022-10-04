@@ -19,9 +19,7 @@ fun Application.configureAuth() {
           (credentials.name == "user" && credentials.password == "password")
         ) {
           UserIdPrincipal(credentials.name)
-        } else {
-          null
-        }
+        } else { null }
       }
     }
 
@@ -29,9 +27,7 @@ fun Application.configureAuth() {
       validate { credentials ->
         if (validAdminCredentials(credentials)) {
           UserIdPrincipal(credentials.name)
-        } else {
-          null
-        }
+        } else { null }
       }
     }
   }
