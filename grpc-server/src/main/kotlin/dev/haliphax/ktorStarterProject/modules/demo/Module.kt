@@ -1,4 +1,4 @@
-package dev.haliphax.ktorStarterProject.modules.core
+package dev.haliphax.ktorStarterProject.modules.demo
 
 import io.ktor.server.application.Application
 import io.ktor.server.application.log

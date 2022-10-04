@@ -1,10 +1,10 @@
 package dev.haliphax.ktorStarterProject.engine
 
+import dev.haliphax.ktorStarterProject.interceptors.RequestInterceptor
 import dev.haliphax.ktorStarterProject.logging.HasLog
 import dev.haliphax.ktorStarterProject.reflection.LoadedMethod
 import dev.haliphax.ktorStarterProject.reflection.toCallables
 import dev.haliphax.ktorStarterProject.services.demo.DemoService
-import dev.haliphax.ktorStarterProject.services.interceptors.RequestInterceptor
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
