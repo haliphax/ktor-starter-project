@@ -1,6 +1,6 @@
 package dev.haliphax.ktorStarterProject.modules.core
 
-import dev.haliphax.ktorStarterProject.data.TestData
+import dev.haliphax.ktorStarterProject.data.DemoData
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
@@ -30,12 +30,12 @@ fun Application.configureRouting() {
     }
 
     get("/data") {
-      val obj = TestData(hello = true)
+      val obj = DemoData(hello = true)
       call.respond(obj)
     }
 
     post("/data") {
-      val obj: TestData = call.receive()
+      val obj: DemoData = call.receive()
       call.respond(obj)
     }
   }

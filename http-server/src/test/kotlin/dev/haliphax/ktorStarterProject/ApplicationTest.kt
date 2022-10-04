@@ -1,6 +1,6 @@
 package dev.haliphax.ktorStarterProject
 
-import dev.haliphax.ktorStarterProject.data.TestData
+import dev.haliphax.ktorStarterProject.data.DemoData
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -95,7 +95,7 @@ class ApplicationTest : DescribeSpec({
       it("should return expected JSON data") {
         testApplication {
           val client = jsonClient()
-          val response: TestData = client.get("/data").body()
+          val response: DemoData = client.get("/data").body()
 
           response.hello shouldBe true
         }
@@ -104,9 +104,9 @@ class ApplicationTest : DescribeSpec({
       it("should accept valid JSON data") {
         testApplication {
           val client = jsonClient()
-          val response: TestData = client.post("/data") {
+          val response: DemoData = client.post("/data") {
             contentType(ContentType.Application.Json)
-            setBody(TestData(hello = false))
+            setBody(DemoData(hello = false))
           }.body()
 
           response.hello shouldBe false

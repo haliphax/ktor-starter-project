@@ -47,7 +47,10 @@ class GrpcApplicationEngine(
   private val configuration: Configuration
 
   init {
-    configuration = Configuration().loadConfiguration(environment.config, environment.classLoader)
+    configuration = Configuration().loadConfiguration(
+      environment.config,
+      environment.classLoader
+    )
     server = NettyServerBuilder
       .forAddress(
         NetworkAddress(
@@ -60,9 +63,8 @@ class GrpcApplicationEngine(
           val service = method.klass.methods.first {
             it.name == method.callable
           }
-            .invoke(
-              method.klass.kotlin.companionObjectInstance
-            ) as BindableService
+            .invoke(method.klass.kotlin.companionObjectInstance)
+            as BindableService
 
           addService(service)
           log.trace("Loaded service: $service")
@@ -79,13 +81,14 @@ class GrpcApplicationEngine(
 
     if (wait) {
       server.awaitTermination()
+      log.info("Stopping")
     }
 
     return this
   }
 
   override fun stop(gracePeriodMillis: Long, timeoutMillis: Long) {
-    log.info("Stopping: $server")
+    log.info("Stopping")
     environment.monitor.raise(ApplicationStopPreparing, environment)
     server.awaitTermination(gracePeriodMillis, TimeUnit.MILLISECONDS)
     server.shutdownNow()

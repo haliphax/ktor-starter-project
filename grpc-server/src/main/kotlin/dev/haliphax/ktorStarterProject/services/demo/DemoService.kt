@@ -7,9 +7,7 @@ import dev.haliphax.ktorStarterProject.services.demo.controllers.DemoController
 
 class DemoService(
   private val demoController: DemoController = DemoController()
-) :
-  DemoServiceGrpcKt.DemoServiceCoroutineImplBase() {
-
+) : DemoServiceGrpcKt.DemoServiceCoroutineImplBase() {
   companion object {
     @JvmStatic
     @Suppress("unused") // application.conf
