@@ -1,4 +1,4 @@
-package dev.haliphax.ktorStarterProject.services.interceptors
+package dev.haliphax.ktorStarterProject.interceptors
 
 import dev.haliphax.ktorStarterProject.logging.HasLog
 import io.grpc.Metadata
