@@ -4,6 +4,7 @@ A very basic [ktor][] project with some convenient configuration and structure:
 
 - HTTP server with separate plugins for authentication, routing, and
   serialization
+- Coroutine-based [gRPC] server engine with demonstration service
 - Shared Gradle plugins, project dependencies, and build configuration
   - [pluginManagement][] and scripted configuration for plugins
   - [Version catalog][] and scripted configuration for dependencies
@@ -16,8 +17,9 @@ A very basic [ktor][] project with some convenient configuration and structure:
 
 
 [ktor]: https://ktor.io
-[Version catalog]: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
+[gRPC]: https://grpc.io
 [pluginManagement]: https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_management
+[Version catalog]: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
 [MockK]: https://mock.io
 [kotest]: https://kotest.io
 [JaCoCo]: https://www.jacoco.org/jacoco
