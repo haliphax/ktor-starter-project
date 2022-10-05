@@ -11,16 +11,15 @@ import org.koin.core.annotation.Named
 
 @Module
 @ComponentScan
+@Suppress("unused")
 class Dependencies {
   @Factory
   @Named("ProtoReflectionService")
-  @Suppress("unused")
   fun protoReflectionService(): BindableService =
     ProtoReflectionService.newInstance()
 
   @Factory
   @Named("DemoService")
-  @Suppress("unused")
   fun demoService(demoController: DemoController): BindableService =
     DemoService(demoController)
 }
