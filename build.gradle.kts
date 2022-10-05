@@ -48,11 +48,12 @@ val jacocoMergedTestReport = tasks.create(
   JacocoReport::class
 ) {
   group = "verification"
-  dependsOn(tasks.test)
 
   afterEvaluate {
     fun Project.getReportTask() =
       this.tasks.withType<JacocoReport>().first()
+
+    subprojects.map { dependsOn(it.tasks.jacocoTestReport) }
 
     sourceDirectories.setFrom(
       subprojects.map { it.getReportTask().sourceDirectories }
