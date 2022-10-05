@@ -1,8 +1,19 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.google.protobuf.gradle.generateProtoTasks
+import com.google.protobuf.gradle.id
+import com.google.protobuf.gradle.ofSourceSet
+import com.google.protobuf.gradle.plugins
+import com.google.protobuf.gradle.protobuf
+import com.google.protobuf.gradle.protoc
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
 
+val grpcVersion: String by project
+val grpcKotlinVersion: String by project
 val koinKspVersion: String by project
+val protobufVersion: String by project
 
 plugins {
   id("com.github.johnrengelman.shadow") apply false
@@ -17,20 +28,21 @@ plugins {
 }
 
 allprojects {
+  group = "dev.haliphax"
+  version = "unspecified"
+
   apply(plugin = "com.google.devtools.ksp")
   apply(plugin = "idea")
   apply(plugin = "jacoco")
+  apply(plugin = "java")
   apply(plugin = "org.jetbrains.kotlin.jvm")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
-  apply(plugin = "java")
 
   dependencies {
+    // generate koin KSP sources
     ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
   }
-
-  group = "dev.haliphax"
-  version = "unspecified"
 
   repositories {
     mavenCentral()
@@ -40,36 +52,35 @@ allprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
   }
 
+  // include generated KSP sources
   sourceSets.main {
     java.srcDirs("build/generated/ksp/main/kotlin")
   }
 
   tasks.jacocoTestReport {
+    dependsOn(tasks.test)
+
+    // XML report for coverage in PR comment
     reports {
       xml.required.set(true)
     }
 
-    dependsOn(tasks.test)
-  }
-
-  afterEvaluate {
-    tasks.jacocoTestReport {
-      classDirectories.setFrom(
-        files(
-          classDirectories.files.map {
-            fileTree(it) {
-              exclude(
-                "**/*$*$*.class",
-                "**/dev/haliphax/ktorStarterProject/MainKt.class",
-                "**/dev/haliphax/ktorStarterProject/Dependencies.class",
-                "**/dev/haliphax/ktorStarterProject/proto/*",
-                "**/generated/*"
-              )
-            }
+    // ignore files
+    classDirectories.setFrom(
+      files(
+        classDirectories.files.map {
+          fileTree(it) {
+            exclude(
+              "**/*$*$*.class",
+              "**/dev/haliphax/ktorStarterProject/MainKt.class",
+              "**/dev/haliphax/ktorStarterProject/Dependencies.class",
+              "**/dev/haliphax/ktorStarterProject/proto/*",
+              "**/generated/*"
+            )
           }
-        )
+        }
       )
-    }
+    )
   }
 
   tasks.test {
@@ -84,6 +95,10 @@ allprojects {
 
   tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+  }
+
+  tasks.withType<KtLintCheckTask> {
+    excludes.add("**/generated/**")
   }
 
   tasks.withType<Test> {
@@ -106,8 +121,34 @@ allprojects {
 subprojects {
   apply(plugin = "application")
   apply(plugin = "com.github.johnrengelman.shadow")
+  apply(plugin = "com.google.protobuf")
 
   tasks.build {
-    dependsOn(tasks.findByName("shadowJar"))
+    dependsOn(tasks.withType<ShadowJar>())
+  }
+
+  // generate protobuffer sources
+  protobuf {
+    protoc {
+      artifact = "com.google.protobuf:protoc:$protobufVersion"
+    }
+
+    plugins {
+      id("grpc") {
+        artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
+      }
+      id("grpcKt") {
+        artifact = "io.grpc:protoc-gen-grpc-kotlin:$grpcKotlinVersion:jdk7@jar"
+      }
+    }
+
+    generateProtoTasks {
+      ofSourceSet("main").forEach {
+        it.plugins {
+          id("grpc")
+          id("grpcKt")
+        }
+      }
+    }
   }
 }
