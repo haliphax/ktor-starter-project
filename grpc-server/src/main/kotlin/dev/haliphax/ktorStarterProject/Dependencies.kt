@@ -1,7 +1,5 @@
 package dev.haliphax.ktorStarterProject
 
-import dev.haliphax.ktorStarterProject.services.demo.DemoService
-import dev.haliphax.ktorStarterProject.services.demo.controllers.DemoController
 import io.grpc.BindableService
 import io.grpc.protobuf.services.ProtoReflectionService
 import org.koin.core.annotation.ComponentScan
@@ -17,9 +15,4 @@ class Dependencies {
   @Named("ProtoReflectionService")
   fun protoReflectionService(): BindableService =
     ProtoReflectionService.newInstance()
-
-  @Factory
-  @Named("DemoService")
-  fun demoService(demoController: DemoController): BindableService =
-    DemoService(demoController)
 }
