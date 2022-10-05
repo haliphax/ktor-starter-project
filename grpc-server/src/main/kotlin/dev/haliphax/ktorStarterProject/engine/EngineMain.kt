@@ -7,6 +7,7 @@ import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.addShutdownHook
 import io.ktor.server.engine.applicationEngineEnvironment
+import org.koin.dsl.koinApplication
 
 object EngineMain : HasLog {
   private fun loadEnvironment(
@@ -26,20 +27,24 @@ object EngineMain : HasLog {
     }
 
   @JvmStatic
-  fun main(args: Array<String>) {
-    val modules = mutableMapOf<String, Application.() -> Unit>()
-    val environment = loadEnvironment(modules)
-    val engine = GrpcApplicationEngine(environment)
+  fun main(
+    args: Array<String>
+  ) {
+    koinApplication {
+      val modules = mutableMapOf<String, Application.() -> Unit>()
+      val environment = loadEnvironment(modules)
+      val engine = GrpcApplicationEngine(environment)
 
-    modules.forEach {
-      it.value(environment.application)
-      log.trace("Loaded module: ${it.key}")
+      modules.forEach {
+        it.value(environment.application)
+        log.trace("Loaded module: ${it.key}")
+      }
+
+      engine.addShutdownHook {
+        engine.stop(3000, 5000)
+      }
+
+      engine.start(true)
     }
-
-    engine.addShutdownHook {
-      engine.stop(3000, 5000)
-    }
-
-    engine.start(true)
   }
 }

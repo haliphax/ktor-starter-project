@@ -2,8 +2,11 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+val koinKspVersion: String by project
+
 plugins {
   id("com.github.johnrengelman.shadow") apply false
+  id("com.google.devtools.ksp")
   id("com.google.protobuf") apply false
   id("org.jetbrains.kotlin.jvm")
   id("org.jetbrains.kotlin.plugin.serialization")
@@ -14,12 +17,17 @@ plugins {
 }
 
 allprojects {
+  apply(plugin = "com.google.devtools.ksp")
   apply(plugin = "idea")
   apply(plugin = "jacoco")
   apply(plugin = "org.jetbrains.kotlin.jvm")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
   apply(plugin = "java")
+
+  dependencies {
+    ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
+  }
 
   group = "dev.haliphax"
   version = "unspecified"
@@ -30,6 +38,10 @@ allprojects {
 
   java {
     sourceCompatibility = JavaVersion.VERSION_1_8
+  }
+
+  sourceSets.main {
+    java.srcDirs("build/generated/ksp/main/kotlin")
   }
 
   tasks.jacocoTestReport {
@@ -49,8 +61,9 @@ allprojects {
               exclude(
                 "**/*$*$*.class",
                 "**/dev/haliphax/ktorStarterProject/MainKt.class",
-                "**/generated/*",
-                "**/dev/haliphax/ktorStarterProject/proto/*"
+                "**/dev/haliphax/ktorStarterProject/Dependencies.class",
+                "**/dev/haliphax/ktorStarterProject/proto/*",
+                "**/generated/*"
               )
             }
           }

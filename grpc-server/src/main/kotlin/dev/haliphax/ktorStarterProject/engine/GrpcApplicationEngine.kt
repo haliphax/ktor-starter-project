@@ -1,10 +1,8 @@
 package dev.haliphax.ktorStarterProject.engine
 
+import dev.haliphax.ktorStarterProject.Dependencies
 import dev.haliphax.ktorStarterProject.interceptors.RequestInterceptor
 import dev.haliphax.ktorStarterProject.logging.HasLog
-import dev.haliphax.ktorStarterProject.reflection.LoadedMethod
-import dev.haliphax.ktorStarterProject.reflection.toCallables
-import dev.haliphax.ktorStarterProject.services.demo.DemoService
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder
@@ -17,62 +15,56 @@ import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.BaseApplicationEngine
 import io.ktor.server.engine.loadCommonConfiguration
 import io.ktor.util.network.NetworkAddress
+import org.koin.core.qualifier.named
+import org.koin.dsl.koinApplication
+import org.koin.ksp.generated.module
 import java.util.concurrent.TimeUnit
-import kotlin.reflect.full.companionObjectInstance
 
 class GrpcApplicationEngine(
   environment: ApplicationEngineEnvironment
 ) : BaseApplicationEngine(environment), HasLog {
-  val server: Server
+  lateinit var server: Server
+  private val configuration: Configuration
 
-  class Configuration(
-    var services: List<LoadedMethod> = emptyList()
-  ) : BaseApplicationEngine.Configuration() {
+  internal class Configuration : BaseApplicationEngine.Configuration() {
+    lateinit var services: List<String>
+
     fun loadConfiguration(
-      config: ApplicationConfig,
-      classLoader: ClassLoader
+      config: ApplicationConfig
     ): Configuration {
       val deploymentConfig = config.config("ktor.deployment")
       loadCommonConfiguration(deploymentConfig)
 
       val applicationConfig = config.config("ktor.application")
-      applicationConfig.propertyOrNull("services")?.getList()?.let {
-        services = it.toCallables(classLoader)
-      }
+      services = applicationConfig.propertyOrNull("services")?.getList()
+        ?: emptyList()
 
       return this
     }
   }
 
-  private val configuration: Configuration
-
   init {
-    configuration = Configuration().loadConfiguration(
-      environment.config,
-      environment.classLoader
-    )
-    server = NettyServerBuilder
-      .forAddress(
-        NetworkAddress(
-          environment.config.host,
-          environment.config.port
-        )
-      )
-      .apply {
-        configuration.services.forEach { method ->
-          val service = method.klass.methods.first {
-            it.name == method.callable
-          }
-            .invoke(method.klass.kotlin.companionObjectInstance)
-            as BindableService
+    configuration = Configuration().loadConfiguration(environment.config)
 
-          addService(service)
-          log.trace("Loaded service: $service")
+    koinApplication {
+      modules(Dependencies().module)
+      server = NettyServerBuilder
+        .forAddress(
+          NetworkAddress(
+            environment.config.host,
+            environment.config.port
+          )
+        )
+        .apply {
+          configuration.services.forEach { name ->
+            val service = koin.get<BindableService>(named(name))
+            addService(service)
+            log.trace("Loaded service: $service")
+          }
         }
-      }
-      .addService(DemoService())
-      .intercept(RequestInterceptor)
-      .build()
+        .intercept(RequestInterceptor)
+        .build()
+    }
   }
 
   override fun start(wait: Boolean): ApplicationEngine {

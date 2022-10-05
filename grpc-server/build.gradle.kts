@@ -18,7 +18,6 @@ dependencies {
   implementation(proto.bundles.all)
   implementation(server.bundles.grpc)
 
-  // testImplementation(client.bundles.all)
   testImplementation(coroutines.bundles.core)
   testImplementation(test.bundles.all)
 }

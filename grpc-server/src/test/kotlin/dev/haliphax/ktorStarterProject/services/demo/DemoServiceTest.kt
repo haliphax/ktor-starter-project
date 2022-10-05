@@ -4,7 +4,6 @@ import dev.haliphax.ktorStarterProject.proto.DemoRequest
 import dev.haliphax.ktorStarterProject.services.demo.controllers.DemoController
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -19,15 +18,6 @@ class DemoServiceTest : DescribeSpec({
       demoService = DemoService(
         demoController = demoController
       )
-    }
-
-    describe("newInstance") {
-      it("returns a unique instance of DemoService") {
-        val one = DemoService.newInstance()
-        val two = DemoService.newInstance()
-
-        one shouldNotBe two
-      }
     }
 
     describe("test") {
