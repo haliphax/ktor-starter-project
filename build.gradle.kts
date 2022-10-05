@@ -111,9 +111,9 @@ allprojects {
             // ignore files
             exclude(
               "**/*$*$*.class",
-              "**/dev/haliphax/ktorStarterProject/MainKt.class",
-              "**/dev/haliphax/ktorStarterProject/Dependencies.class",
-              "**/dev/haliphax/ktorStarterProject/proto/*",
+              "**/dev/haliphax/*/MainKt.class",
+              "**/dev/haliphax/*/Dependencies.class",
+              "**/dev/haliphax/*/proto/*",
               "**/generated/*"
             )
           }
