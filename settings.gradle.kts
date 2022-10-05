@@ -5,6 +5,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("7.1.2")
+    id("com.google.devtools.ksp").version("1.6.21-1.0.6")
     id("com.google.protobuf").version("0.8.19")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
@@ -15,6 +16,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
   val coroutinesVersion: String by settings
+  val koinVersion: String by settings
   val kotlinVersion: String by settings
   val kotestVersion: String by settings
   val ktorVersion: String by settings
@@ -28,10 +30,18 @@ dependencyResolutionManagement {
     create("common") {
       library("javax-annotation", "javax.annotation", "javax.annotation-api")
         .version("1.3.1")
+      library("koin", "io.insert-koin", "koin-core")
+        .version(koinVersion)
+      library("koin-annotations", "io.insert-koin", "koin-annotations")
+        .version("1.0.3")
+      library("koin-ktor", "io.insert-koin", "koin-ktor")
+        .version(koinVersion)
       library("kotlin", "org.jetbrains.kotlin", "kotlin-bom")
         .version(kotlinVersion)
       library("kotlinx-s18n-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json")
         .version("1.3.2")
+      library("ksp", "io.insert-koin", "koin-ksp-compiler")
+        .version("1.0.3")
       library("ktor-s18n-json", "io.ktor", "ktor-serialization-kotlinx-json")
         .version(ktorVersion)
       library("logback", "ch.qos.logback", "logback-classic")
@@ -41,8 +51,12 @@ dependencyResolutionManagement {
         "all",
         listOf(
           "javax-annotation",
+          "koin",
+          "koin-annotations",
+          "koin-ktor",
           "kotlin",
           "kotlinx-s18n-json",
+          "ksp",
           "ktor-s18n-json",
           "logback"
         )
@@ -141,24 +155,25 @@ dependencyResolutionManagement {
     }
 
     create("test") {
-      library("server-host", "io.ktor", "ktor-server-test-host")
-        .version(ktorVersion)
-      library("kotlin-test", "org.jetbrains.kotlin", "kotlin-test")
-        .version(kotlinVersion)
+      library("koin-test", "io.insert-koin", "koin-test")
+        .version(koinVersion)
       library("kotest-assertion", "io.kotest", "kotest-assertions-core")
         .version(kotestVersion)
       library("kotest-runner", "io.kotest", "kotest-runner-junit5-jvm")
         .version(kotestVersion)
       library("mockk", "io.mockk", "mockk")
         .version("1.12.7")
+      library("server-test-host", "io.ktor", "ktor-server-test-host")
+        .version(ktorVersion)
 
       bundle(
         "all",
         listOf(
-          "server-host",
+          "koin-test",
           "kotest-assertion",
           "kotest-runner",
-          "mockk"
+          "mockk",
+          "server-test-host"
         )
       )
     }
