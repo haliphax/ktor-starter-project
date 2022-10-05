@@ -71,12 +71,12 @@ jobs:
     - name: Run unit tests
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: test
+        arguments: testAggregateTestReport
 
     - name: Add coverage to PR
       uses: madrapps/jacoco-report@v1.3
       with:
-        paths: ${{ github.workspace }}/http-server/build/reports/jacoco/test/jacocoTestReport.xml, ${{ github.workspace }}/grpc-server/build/reports/jacoco/test/jacocoTestReport.xml
+        paths: ${{ github.workspace }}/build/reports/jacoco/jacocoMergedTestReport/jacocoMergedTestReport.xml
         token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
@@ -100,12 +100,12 @@ jobs:
         # reuse static assets (css, js, images)
         [ -d docs/static ] && rm -rf docs/static
         mkdir -p docs/static
-        mv http-server/build/reports/tests/test/{css,js} docs/static
-        mv http-server/build/reports/jacoco/test/html/jacoco-resources docs/static
+        mv build/reports/tests/unit-test/aggregated-results/{css,js} docs/static
+        mv build/reports/jacoco/jacocoMergedTestReport/html/jacoco-resources docs/static
 
         # copy reports to rev folder
-        mv http-server/build/reports/tests/test docs/$REV
-        mv http-server/build/reports/jacoco/test/html docs/$REV/coverage
+        mv build/reports/tests/unit-test/aggregated-results docs/$REV
+        mv build/reports/jacoco/jacocoMergedTestReport/html docs/$REV/coverage
 
         # link static assets to rev folder
         rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \

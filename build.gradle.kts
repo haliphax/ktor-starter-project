@@ -22,9 +22,53 @@ plugins {
   id("org.jetbrains.kotlin.jvm")
   id("org.jetbrains.kotlin.plugin.serialization")
   id("org.jlleitschuh.gradle.ktlint")
+  id("test-report-aggregation")
   idea
   jacoco
   java
+}
+
+dependencies {
+  // aggregate test reports from all subprojects
+  subprojects.map {
+    testReportAggregation(project(it.path))
+  }
+}
+
+tasks.check {
+  dependsOn(tasks.testAggregateTestReport)
+}
+
+tasks.testAggregateTestReport {
+  finalizedBy(jacocoMergedTestReport)
+}
+
+val jacocoMergedTestReport = tasks.create(
+  "jacocoMergedTestReport",
+  JacocoReport::class
+) {
+  group = "verification"
+  dependsOn(tasks.test)
+
+  afterEvaluate {
+    fun Project.getReportTask() =
+      this.tasks.withType<JacocoReport>().first()
+
+    sourceDirectories.setFrom(
+      subprojects.map { it.getReportTask().sourceDirectories }
+    )
+    classDirectories.setFrom(
+      subprojects.map { it.getReportTask().classDirectories }
+    )
+    executionData.setFrom(
+      fileTree(".").include("**/build/jacoco/test.exec")
+    )
+
+    reports {
+      html.required.set(true)
+      xml.required.set(true)
+    }
+  }
 }
 
 allprojects {
@@ -52,24 +96,19 @@ allprojects {
     sourceCompatibility = JavaVersion.VERSION_1_8
   }
 
-  // include generated KSP sources
   sourceSets.main {
+    // include generated KSP sources
     java.srcDirs("build/generated/ksp/main/kotlin")
   }
 
   tasks.jacocoTestReport {
     dependsOn(tasks.test)
 
-    // XML report for coverage in PR comment
-    reports {
-      xml.required.set(true)
-    }
-
-    // ignore files
     classDirectories.setFrom(
       files(
         classDirectories.files.map {
           fileTree(it) {
+            // ignore files
             exclude(
               "**/*$*$*.class",
               "**/dev/haliphax/ktorStarterProject/MainKt.class",
