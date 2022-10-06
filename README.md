@@ -11,6 +11,7 @@ A very basic [ktor][] project with some convenient configuration and structure:
   - [Version catalog][] and scripted configuration for dependencies
 - [MockK][] and [kotest][] libraries for coherent unit tests
 - [JaCoCo][] test coverage plugin with reasonable configuration
+- [Test report aggregation][] for collecting test reports for subprojects
 - [GitHub Actions workflow][] for pull requests and merges
   - Runs [ktlint][] check against source
   - Executes unit tests
@@ -25,6 +26,7 @@ A very basic [ktor][] project with some convenient configuration and structure:
 [MockK]: https://mock.io
 [kotest]: https://kotest.io
 [JaCoCo]: https://www.jacoco.org/jacoco
+[Test report aggregation]: https://docs.gradle.org/current/userguide/test_report_aggregation_plugin.html
 [GitHub Actions workflow]: https://docs.github.com/en/actions/using-workflows/about-workflows
 [ktlint]: https://ktlint.github.io
 [GitHub Pages]: https://pages.github.com
