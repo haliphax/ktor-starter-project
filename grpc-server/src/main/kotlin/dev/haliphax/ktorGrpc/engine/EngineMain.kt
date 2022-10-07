@@ -7,29 +7,38 @@ import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.addShutdownHook
 import io.ktor.server.engine.applicationEngineEnvironment
 import org.koin.dsl.koinApplication
+import java.lang.reflect.Method
 
 typealias Module = Application.() -> Unit
 
-object EngineMain : HasLog {
-  private lateinit var environment: ApplicationEngineEnvironment
+fun moduleWrapper(method: Method): Module {
+  return {
+    method(this, this)
+  }
+}
 
-  private fun mappedModules(modules: List<String>): Map<String, Module> =
-    modules.associate { fqn ->
+object EngineMain : HasLog {
+  private fun mappedModules(
+    classLoader: ClassLoader,
+    modules: List<String>
+  ): Map<String, Module> =
+    modules.associateWith { fqn ->
       val dotIndex = fqn.lastIndexOf('.')
       val className = fqn.substring(0, dotIndex)
       val methodName = fqn.substring(dotIndex + 1)
-      val klass = environment.classLoader.loadClass(className)
-
-      @Suppress("UNCHECKED_CAST")
-      Pair(fqn, { klass.methods.first { it.name == methodName } } as Module)
+      val klass = classLoader.loadClass(className)
+      val module = klass.methods.first { it.name == methodName }
+      moduleWrapper(module)
     }
 
-  private fun loadEnvironment(modules: MutableMap<String, Module>): ApplicationEngineEnvironment =
+  private fun loadEnvironment(
+    modules: MutableMap<String, Module>
+  ): ApplicationEngineEnvironment =
     applicationEngineEnvironment {
       config = ApplicationConfig(null)
       this.modules.addAll(
         config.propertyOrNull("ktor.application.modules")?.let {
-          mappedModules(it.getList()).map { module ->
+          mappedModules(classLoader, it.getList()).map { module ->
             module.value.apply { modules[module.key] = this }
           }
         } ?: emptyList()
@@ -37,12 +46,10 @@ object EngineMain : HasLog {
     }
 
   @JvmStatic
-  fun main(
-    args: Array<String>
-  ) {
+  fun main(args: Array<String>) {
     koinApplication {
       val modules = mutableMapOf<String, Module>()
-      environment = loadEnvironment(modules)
+      val environment = loadEnvironment(modules)
       val engine = GrpcApplicationEngine(environment)
 
       modules.forEach {

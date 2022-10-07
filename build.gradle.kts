@@ -112,8 +112,9 @@ allprojects {
             // ignore files
             exclude(
               "**/*$*$*.class",
-              "**/dev/haliphax/*/MainKt.class",
+              "**/dev/haliphax/*/Catalog.class",
               "**/dev/haliphax/*/Dependencies.class",
+              "**/dev/haliphax/*/MainKt.class",
               "**/dev/haliphax/*/proto/*",
               "**/generated/*"
             )
@@ -147,8 +148,7 @@ allprojects {
     testLogging {
       showCauses = true
       showStackTraces = true
-      showStandardStreams = true
-      exceptionFormat = TestExceptionFormat.FULL
+      exceptionFormat = TestExceptionFormat.SHORT
       events(
         TestLogEvent.PASSED,
         TestLogEvent.FAILED,

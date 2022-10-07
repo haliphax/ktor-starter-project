@@ -7,6 +7,6 @@ class DemoControllerTest : DescribeSpec({
   val demoController = DemoController()
 
   it("should return the expected message") {
-    demoController.test() shouldBe "Testing"
+    demoController.test("hungry") shouldBe "Hi, hungry, I'm Dad"
   }
 })

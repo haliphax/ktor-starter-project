@@ -97,7 +97,7 @@ class ApplicationTest : DescribeSpec({
           val client = jsonClient()
           val response: DemoData = client.get("/data").body()
 
-          response.hello shouldBe true
+          response.message shouldBe "Testing"
         }
       }
 
@@ -106,10 +106,10 @@ class ApplicationTest : DescribeSpec({
           val client = jsonClient()
           val response: DemoData = client.post("/data") {
             contentType(ContentType.Application.Json)
-            setBody(DemoData(hello = false))
+            setBody(DemoData(message = "testing"))
           }.body()
 
-          response.hello shouldBe false
+          response.message shouldBe "Modified testing"
         }
       }
 

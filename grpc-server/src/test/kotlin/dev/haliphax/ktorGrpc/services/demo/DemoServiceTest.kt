@@ -21,16 +21,18 @@ class DemoServiceTest : DescribeSpec({
     }
 
     describe("test") {
-      every { demoController.test() } returns("Testing")
-      val request = DemoRequest.getDefaultInstance()
+      every { demoController.test(any()) } answers {
+        "Hi, ${firstArg<String>()}, I'm Dad"
+      }
+      val request = DemoRequest.newBuilder().setMessage("hungry").build()
       val result = demoService.demo(request)
 
       it("should call DemoController.test") {
-        verify { demoController.test() }
+        verify { demoController.test(any()) }
       }
 
       it("should return the message from DemoController.test") {
-        result.message shouldBe "Testing"
+        result.message shouldBe "Hi, hungry, I'm Dad"
       }
     }
   }

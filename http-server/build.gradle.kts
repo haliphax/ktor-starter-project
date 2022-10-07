@@ -1,6 +1,9 @@
 dependencies {
+  api(project(":proto"))
   implementation(common.bundles.all)
+  implementation(proto.bundles.api)
   implementation(server.bundles.http)
+  implementation(server.grpc.netty)
 
   testImplementation(client.bundles.all)
   testImplementation(coroutines.bundles.core)
