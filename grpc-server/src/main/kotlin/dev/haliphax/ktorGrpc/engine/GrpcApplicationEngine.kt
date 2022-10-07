@@ -29,9 +29,7 @@ class GrpcApplicationEngine(
   internal class Configuration : BaseApplicationEngine.Configuration() {
     lateinit var services: List<String>
 
-    fun loadConfiguration(
-      config: ApplicationConfig
-    ): Configuration {
+    fun loadConfiguration(config: ApplicationConfig): Configuration {
       val deploymentConfig = config.config("ktor.deployment")
       loadCommonConfiguration(deploymentConfig)
 

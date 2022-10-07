@@ -18,7 +18,8 @@ class DemoService(
   BindableService {
 
   override suspend fun demo(request: DemoRequest): DemoResponse {
-    val message = demoController.test()
-    return DemoResponse.newBuilder().setMessage(message).build()
+    val input = request.message
+    val output = demoController.test(input)
+    return DemoResponse.newBuilder().setMessage(output).build()
   }
 }

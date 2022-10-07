@@ -110,6 +110,15 @@ dependencyResolutionManagement {
         .version(protobufVersion)
 
       bundle(
+        "api",
+        listOf(
+          "grpc-kotlin-stub",
+          "grpc-protobuf",
+          "grpc-stub"
+        )
+      )
+
+      bundle(
         "all",
         listOf(
           "grpc-kotlin-stub",
@@ -184,3 +193,4 @@ dependencyResolutionManagement {
 rootProject.name = "root"
 include("grpc-server")
 include("http-server")
+include("proto")

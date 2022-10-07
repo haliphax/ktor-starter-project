@@ -4,5 +4,5 @@ import org.koin.core.annotation.Single
 
 @Single
 class DemoController {
-  fun test(): String = "Testing"
+  fun test(input: String): String = "Hi, $input, I'm Dad"
 }

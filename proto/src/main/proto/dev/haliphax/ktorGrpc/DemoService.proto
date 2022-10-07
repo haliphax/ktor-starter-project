@@ -10,7 +10,9 @@ service DemoService {
   rpc Demo (DemoRequest) returns (DemoResponse) {}
 }
 
-message DemoRequest {}
+message DemoRequest {
+  string message = 1;
+}
 
 message DemoResponse {
   string message = 1;
