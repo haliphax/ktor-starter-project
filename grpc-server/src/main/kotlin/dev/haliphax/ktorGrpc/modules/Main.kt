@@ -9,6 +9,7 @@ import org.koin.ktor.plugin.Koin
 @Suppress("unused") // application.conf
 fun Application.main() {
   install(Koin) {
+    printLogger()
     modules(Dependencies().module)
   }
 }

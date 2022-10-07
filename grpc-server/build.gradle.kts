@@ -1,4 +1,5 @@
 dependencies {
+  implementation(project(":common"))
   implementation(project(":proto"))
   implementation(common.bundles.all)
   implementation(proto.bundles.api)

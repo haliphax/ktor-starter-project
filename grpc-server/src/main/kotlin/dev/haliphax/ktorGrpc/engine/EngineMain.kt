@@ -1,7 +1,7 @@
 package dev.haliphax.ktorGrpc.engine
 
+import dev.haliphax.common.logging.HasLog
 import dev.haliphax.ktorGrpc.aliases.Module
-import dev.haliphax.ktorGrpc.logging.HasLog
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.addShutdownHook
