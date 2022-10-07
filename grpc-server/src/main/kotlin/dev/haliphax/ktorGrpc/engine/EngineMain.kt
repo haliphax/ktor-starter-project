@@ -1,7 +1,7 @@
 package dev.haliphax.ktorGrpc.engine
 
+import dev.haliphax.ktorGrpc.aliases.Module
 import dev.haliphax.ktorGrpc.logging.HasLog
-import io.ktor.server.application.Application
 import io.ktor.server.config.ApplicationConfig
 import io.ktor.server.engine.ApplicationEngineEnvironment
 import io.ktor.server.engine.addShutdownHook
@@ -9,16 +9,22 @@ import io.ktor.server.engine.applicationEngineEnvironment
 import org.koin.dsl.koinApplication
 import java.lang.reflect.Method
 
-typealias Module = Application.() -> Unit
-
-fun moduleWrapper(method: Method): Module {
-  return {
-    method(this, this)
-  }
-}
-
 object EngineMain : HasLog {
-  private fun mappedModules(
+  private var loadedModules = mutableMapOf<String, Module>()
+
+  private fun loadEnvironment(): ApplicationEngineEnvironment =
+    applicationEngineEnvironment {
+      config = ApplicationConfig(null)
+      this.modules.addAll(
+        config.propertyOrNull("ktor.application.modules")?.let {
+          mapModules(classLoader, it.getList()).map { module ->
+            module.value.apply { loadedModules[module.key] = this }
+          }
+        } ?: emptyList()
+      )
+    }
+
+  private fun mapModules(
     classLoader: ClassLoader,
     modules: List<String>
   ): Map<String, Module> =
@@ -31,28 +37,16 @@ object EngineMain : HasLog {
       moduleWrapper(module)
     }
 
-  private fun loadEnvironment(
-    modules: MutableMap<String, Module>
-  ): ApplicationEngineEnvironment =
-    applicationEngineEnvironment {
-      config = ApplicationConfig(null)
-      this.modules.addAll(
-        config.propertyOrNull("ktor.application.modules")?.let {
-          mappedModules(classLoader, it.getList()).map { module ->
-            module.value.apply { modules[module.key] = this }
-          }
-        } ?: emptyList()
-      )
-    }
+  private fun moduleWrapper(method: Method): Module =
+    { method(this, this) }
 
   @JvmStatic
   fun main(args: Array<String>) {
     koinApplication {
-      val modules = mutableMapOf<String, Module>()
-      val environment = loadEnvironment(modules)
+      val environment = loadEnvironment()
       val engine = GrpcApplicationEngine(environment)
 
-      modules.forEach {
+      loadedModules.forEach {
         it.value(environment.application)
         log.trace("Loaded module: ${it.key}")
       }

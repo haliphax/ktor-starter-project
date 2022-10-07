@@ -115,8 +115,9 @@ allprojects {
               "**/dev/haliphax/*/Catalog.class",
               "**/dev/haliphax/*/Dependencies.class",
               "**/dev/haliphax/*/MainKt.class",
-              "**/dev/haliphax/*/proto/*",
-              "**/generated/*"
+              "**/dev/haliphax/*/aliases/*",
+              "**/generated/*",
+              "**/proto/*"
             )
           }
         }
