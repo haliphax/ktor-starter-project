@@ -11,7 +11,7 @@ import org.koin.dsl.koinApplication
 @Module
 @ComponentScan
 class Dependencies {
-  @Single()
+  @Single
   fun demoService(config: ApplicationConfig): DemoServiceCoroutineStub {
     lateinit var service: DemoServiceCoroutineStub
 
