@@ -1,8 +1,8 @@
 package dev.haliphax.ktorGrpc.engine
 
+import dev.haliphax.common.logging.HasLog
 import dev.haliphax.ktorGrpc.Dependencies
 import dev.haliphax.ktorGrpc.interceptors.RequestInterceptor
-import dev.haliphax.ktorGrpc.logging.HasLog
 import io.grpc.BindableService
 import io.grpc.Server
 import io.grpc.netty.shaded.io.grpc.netty.NettyServerBuilder

@@ -8,6 +8,7 @@ import com.google.protobuf.gradle.protoc
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
 
 val grpcVersion: String by project
@@ -32,6 +33,12 @@ dependencies {
   // aggregate test reports from all subprojects
   subprojects.map {
     testReportAggregation(project(it.path))
+  }
+}
+
+configure<KtlintExtension> {
+  filter {
+    exclude("**/generated/**")
   }
 }
 
@@ -115,14 +122,17 @@ allprojects {
               "**/dev/haliphax/*/Catalog.class",
               "**/dev/haliphax/*/Dependencies.class",
               "**/dev/haliphax/*/MainKt.class",
-              "**/dev/haliphax/*/aliases/*",
-              "**/generated/*",
-              "**/proto/*"
+              "**/dev/haliphax/*/aliases/**",
+              "**/generated/**",
+              "**/proto/**"
             )
           }
         }
       )
     )
+  }
+
+  tasks.ktlintFormat {
   }
 
   tasks.test {

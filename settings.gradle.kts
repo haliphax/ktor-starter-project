@@ -194,3 +194,4 @@ rootProject.name = "root"
 include("grpc-server")
 include("http-server")
 include("proto")
+include("common")

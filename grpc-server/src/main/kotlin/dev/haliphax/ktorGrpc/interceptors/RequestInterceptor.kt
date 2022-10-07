@@ -1,6 +1,6 @@
 package dev.haliphax.ktorGrpc.interceptors
 
-import dev.haliphax.ktorGrpc.logging.HasLog
+import dev.haliphax.common.logging.HasLog
 import io.grpc.Metadata
 import io.grpc.ServerCall
 import io.grpc.ServerCallHandler
