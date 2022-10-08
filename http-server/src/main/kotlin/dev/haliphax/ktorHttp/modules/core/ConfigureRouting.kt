@@ -1,7 +1,7 @@
 package dev.haliphax.ktorHttp.modules.core
 
 import dev.haliphax.ktorGrpc.proto.DemoRequest
-import dev.haliphax.ktorHttp.Catalog
+import dev.haliphax.ktorGrpc.proto.DemoServiceGrpcKt.DemoServiceCoroutineStub
 import dev.haliphax.ktorHttp.data.DemoData
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -12,10 +12,16 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
-import kotlinx.coroutines.runBlocking
+import org.koin.core.parameter.parametersOf
+import org.koin.ktor.ext.getKoin
 
 fun Application.configureRouting() {
   routing {
+    val koin = application.getKoin()
+    val demoService: DemoServiceCoroutineStub = koin.get {
+      parametersOf(application.environment.config)
+    }
+
     authenticate("auth-admin") {
       get("/admin") {
         call.respondText("Authorized")
@@ -43,13 +49,11 @@ fun Application.configureRouting() {
     }
 
     post("/grpc") {
-      runBlocking {
-        val obj: DemoData = call.receive()
-        val grpcRequest =
-          DemoRequest.newBuilder().setMessage(obj.message).build()
-        val response = Catalog.demoService.demo(grpcRequest)
-        call.respond(response.message)
-      }
+      val obj: DemoData = call.receive()
+      val grpcRequest =
+        DemoRequest.newBuilder().setMessage(obj.message).build()
+      val response = demoService.demo(grpcRequest)
+      call.respond(response.message)
     }
   }
 }

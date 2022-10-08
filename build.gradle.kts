@@ -8,8 +8,6 @@ import com.google.protobuf.gradle.protoc
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
 
 val grpcVersion: String by project
 val grpcKotlinVersion: String by project
@@ -33,12 +31,6 @@ dependencies {
   // aggregate test reports from all subprojects
   subprojects.map {
     testReportAggregation(project(it.path))
-  }
-}
-
-configure<KtlintExtension> {
-  filter {
-    exclude("**/generated/**")
   }
 }
 
@@ -106,7 +98,7 @@ allprojects {
 
   sourceSets.main {
     // include generated KSP sources
-    java.srcDirs("build/generated/ksp/main/kotlin")
+    java.srcDirs("generated/ksp/main/kotlin")
   }
 
   tasks.jacocoTestReport {
@@ -119,7 +111,6 @@ allprojects {
             // ignore files
             exclude(
               "**/*$*$*.class",
-              "**/dev/haliphax/*/Catalog.class",
               "**/dev/haliphax/*/Dependencies.class",
               "**/dev/haliphax/*/MainKt.class",
               "**/dev/haliphax/*/aliases/**",
@@ -130,9 +121,6 @@ allprojects {
         }
       )
     )
-  }
-
-  tasks.ktlintFormat {
   }
 
   tasks.test {
@@ -147,10 +135,6 @@ allprojects {
 
   tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
-  }
-
-  tasks.withType<KtLintCheckTask> {
-    excludes.add("**/generated/**")
   }
 
   tasks.withType<Test> {
@@ -170,6 +154,10 @@ allprojects {
 }
 
 subprojects {
+  if (name == "common") {
+    return@subprojects
+  }
+
   apply(plugin = "application")
   apply(plugin = "com.github.johnrengelman.shadow")
   apply(plugin = "com.google.protobuf")
