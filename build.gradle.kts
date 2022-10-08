@@ -98,7 +98,7 @@ allprojects {
 
   sourceSets.main {
     // include generated KSP sources
-    java.srcDirs("generated/ksp/main/kotlin")
+    java.srcDirs("build/generated/ksp/main/kotlin")
   }
 
   tasks.jacocoTestReport {
