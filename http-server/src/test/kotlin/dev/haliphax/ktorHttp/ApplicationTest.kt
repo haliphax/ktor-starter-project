@@ -1,5 +1,8 @@
 package dev.haliphax.ktorHttp
 
+import dev.haliphax.common.testing.koinTestApplication
+import dev.haliphax.ktorGrpc.proto.DemoResponse
+import dev.haliphax.ktorGrpc.proto.DemoServiceGrpcKt.DemoServiceCoroutineStub
 import dev.haliphax.ktorHttp.data.DemoData
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
@@ -12,13 +15,26 @@ import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
-import io.ktor.server.testing.testApplication
+import io.ktor.server.config.ApplicationConfig
+import io.ktor.server.testing.ApplicationTestBuilder
+import io.mockk.coEvery
+import io.mockk.coVerify
 import kotlinx.coroutines.runBlocking
+import org.koin.core.parameter.parametersOf
+import org.koin.java.KoinJavaComponent.inject
+import org.koin.ksp.generated.module
+import org.koin.test.KoinTest
 
-class ApplicationTest : DescribeSpec({
+fun koinTest(block: suspend ApplicationTestBuilder.() -> Unit) =
+  koinTestApplication(
+    listOf(Dependencies().module, TestDependencies().module),
+    block
+  )
+
+class ApplicationTest : KoinTest, DescribeSpec({
   describe("application") {
     it("should serve the homepage") {
-      testApplication {
+      koinTest {
         val client = basicClient()
         val response = client.get("/")
 
@@ -28,7 +44,7 @@ class ApplicationTest : DescribeSpec({
 
     describe("/admin endpoint") {
       it("should refuse access given bad credentials") {
-        testApplication {
+        koinTest {
           val client = badClient("admin")
           val response = client.get("/admin")
 
@@ -37,7 +53,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should refuse access given no credentials") {
-        testApplication {
+        koinTest {
           val response = client.get("/admin")
 
           response.status shouldBe HttpStatusCode.Unauthorized
@@ -45,7 +61,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should permit access given good credentials") {
-        testApplication {
+        koinTest {
           val client = adminClient()
           val response = client.get("/admin")
 
@@ -56,7 +72,7 @@ class ApplicationTest : DescribeSpec({
 
     describe("/basic endpoint") {
       it("should refuse access given bad credentials") {
-        testApplication {
+        koinTest {
           val client = badClient("user")
           val response = client.get("/basic")
 
@@ -65,7 +81,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should refuse access given no credentials") {
-        testApplication {
+        koinTest {
           val response = client.get("/basic")
 
           response.status shouldBe HttpStatusCode.Unauthorized
@@ -73,7 +89,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should permit access given admin credentials") {
-        testApplication {
+        koinTest {
           val client = adminClient()
           val response = client.get("/basic")
 
@@ -82,7 +98,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should permit access given basic credentials") {
-        testApplication {
+        koinTest {
           val client = basicClient()
           val response = client.get("/basic")
 
@@ -93,7 +109,7 @@ class ApplicationTest : DescribeSpec({
 
     describe("/data endpoint") {
       it("should return expected JSON data") {
-        testApplication {
+        koinTest {
           val client = jsonClient()
           val response: DemoData = client.get("/data").body()
 
@@ -102,7 +118,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should accept valid JSON data") {
-        testApplication {
+        koinTest {
           val client = jsonClient()
           val response: DemoData = client.post("/data") {
             contentType(ContentType.Application.Json)
@@ -114,7 +130,7 @@ class ApplicationTest : DescribeSpec({
       }
 
       it("should refuse invalid JSON data") {
-        testApplication {
+        koinTest {
           val client = jsonClient()
 
           shouldThrowAny {
@@ -125,6 +141,30 @@ class ApplicationTest : DescribeSpec({
               }
             }
           }
+        }
+      }
+    }
+
+    describe("/grpc endpoint") {
+      it("calls the gRPC service") {
+        koinTest {
+          val grpcStub: DemoServiceCoroutineStub
+            by inject(DemoServiceCoroutineStub::class.java) {
+              parametersOf(ApplicationConfig(null))
+            }
+
+          coEvery { grpcStub.demo(any()) } answers {
+            DemoResponse.newBuilder().setMessage("Hi, hungry, I'm Dad").build()
+          }
+
+          runBlocking {
+            jsonClient().post("/grpc") {
+              contentType(ContentType.Application.Json)
+              setBody(DemoData("hungry"))
+            }
+          }
+
+          coVerify { grpcStub.demo(any()) }
         }
       }
     }

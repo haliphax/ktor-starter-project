@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 dependencies {
   implementation(project(":common"))
   implementation(project(":proto"))
@@ -11,6 +13,24 @@ dependencies {
 
 application {
   mainClass.set("dev.haliphax.ktorGrpc.engine.EngineMain")
+}
+
+testing {
+  suites {
+    create("integrationTest", JvmTestSuite::class) {
+      dependencies {
+        implementation(project(":common"))
+        implementation(project(":grpc-server"))
+        implementation(project(":proto"))
+        implementation(client.bundles.all)
+        implementation(common.bundles.all)
+        implementation(coroutines.bundles.core)
+        implementation(proto.bundles.api)
+        implementation(server.grpc.netty)
+        implementation(test.bundles.all)
+      }
+    }
+  }
 }
 
 tasks.jar {

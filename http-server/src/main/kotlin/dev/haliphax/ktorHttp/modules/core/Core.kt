@@ -1,18 +1,9 @@
 package dev.haliphax.ktorHttp.modules.core
 
-import dev.haliphax.ktorHttp.Dependencies
 import io.ktor.server.application.Application
-import io.ktor.server.application.install
-import org.koin.ksp.generated.module
-import org.koin.ktor.plugin.Koin
 
 @Suppress("unused") // application.conf
 fun Application.core() {
-  install(Koin) {
-    printLogger()
-    modules(Dependencies().module)
-  }
-
   configureAuth()
   configureRouting()
   configureSerialization()
