@@ -146,7 +146,7 @@ class ApplicationTest : KoinTest, DescribeSpec({
     }
 
     describe("/grpc endpoint") {
-      it("calls the gRPC service") {
+      it("should call the gRPC service") {
         koinTest {
           val grpcStub: DemoServiceCoroutineStub
             by inject(DemoServiceCoroutineStub::class.java) {
