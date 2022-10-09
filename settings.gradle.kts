@@ -165,7 +165,15 @@ dependencyResolutionManagement {
     }
 
     create("test") {
+      val junitVersion: String by settings
+
+      library("junit-api", "org.junit.jupiter", "junit-jupiter-api")
+        .version(junitVersion)
+      library("junit-engine", "org.junit.jupiter", "junit-jupiter-engine")
+        .version(junitVersion)
       library("koin-test", "io.insert-koin", "koin-test")
+        .version(koinVersion)
+      library("koin-test-junit", "io.insert-koin", "koin-test-junit5")
         .version(koinVersion)
       library("kotest-assertion", "io.kotest", "kotest-assertions-core")
         .version(kotestVersion)
@@ -179,7 +187,9 @@ dependencyResolutionManagement {
       bundle(
         "all",
         listOf(
+          "junit-api",
           "koin-test",
+          "koin-test-junit",
           "kotest-assertion",
           "kotest-runner",
           "mockk",

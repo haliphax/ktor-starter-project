@@ -1,18 +1,11 @@
+@file:Suppress("UnstableApiUsage")
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.google.protobuf.gradle.generateProtoTasks
-import com.google.protobuf.gradle.id
-import com.google.protobuf.gradle.ofSourceSet
-import com.google.protobuf.gradle.plugins
-import com.google.protobuf.gradle.protobuf
-import com.google.protobuf.gradle.protoc
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val grpcVersion: String by project
-val grpcKotlinVersion: String by project
 val koinKspVersion: String by project
-val protobufVersion: String by project
 
 plugins {
   id("com.github.johnrengelman.shadow") apply false
@@ -30,11 +23,15 @@ plugins {
 dependencies {
   // aggregate test reports from all subprojects
   subprojects.map {
-    testReportAggregation(project(it.path))
+    testReportAggregation(it)
   }
 }
 
 tasks.check {
+  testing.suites.findByName("integrationTest")?.let {
+    dependsOn(it)
+  }
+
   dependsOn(tasks.testAggregateTestReport)
 }
 
@@ -83,17 +80,24 @@ allprojects {
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-  dependencies {
-    // generate koin KSP sources
-    ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
-  }
-
   repositories {
     mavenCentral()
   }
 
+  dependencies {
+    // generate koin KSP sources
+    ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
+    kspTest("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
+  }
+
   java {
     sourceCompatibility = JavaVersion.VERSION_1_8
+  }
+
+  ktlint {
+    filter {
+      exclude { it.file.path.contains("/generated/") }
+    }
   }
 
   sourceSets.main {
@@ -138,7 +142,9 @@ allprojects {
   }
 
   tasks.withType<Test> {
-    useJUnitPlatform()
+    useJUnitPlatform {
+      includeEngines()
+    }
 
     testLogging {
       showCauses = true
@@ -154,40 +160,14 @@ allprojects {
 }
 
 subprojects {
-  if (name == "common") {
+  if (listOf("common", "proto").contains(name)) {
     return@subprojects
   }
 
   apply(plugin = "application")
   apply(plugin = "com.github.johnrengelman.shadow")
-  apply(plugin = "com.google.protobuf")
 
   tasks.build {
     dependsOn(tasks.withType<ShadowJar>())
-  }
-
-  // generate protobuffer sources
-  protobuf {
-    protoc {
-      artifact = "com.google.protobuf:protoc:$protobufVersion"
-    }
-
-    plugins {
-      id("grpc") {
-        artifact = "io.grpc:protoc-gen-grpc-java:$grpcVersion"
-      }
-      id("grpcKt") {
-        artifact = "io.grpc:protoc-gen-grpc-kotlin:$grpcKotlinVersion:jdk7@jar"
-      }
-    }
-
-    generateProtoTasks {
-      ofSourceSet("main").forEach {
-        it.plugins {
-          id("grpc")
-          id("grpcKt")
-        }
-      }
-    }
   }
 }
