@@ -1,4 +1,4 @@
-package dev.haliphax.ktorHttp
+package dev.haliphax.ktorHttp.helpers
 
 import io.ktor.client.plugins.auth.Auth
 import io.ktor.client.plugins.auth.providers.BasicAuthCredentials

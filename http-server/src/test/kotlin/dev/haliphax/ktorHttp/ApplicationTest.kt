@@ -1,9 +1,13 @@
 package dev.haliphax.ktorHttp
 
-import dev.haliphax.common.testing.koinTestApplication
 import dev.haliphax.ktorGrpc.proto.DemoResponse
 import dev.haliphax.ktorGrpc.proto.DemoServiceGrpcKt.DemoServiceCoroutineStub
 import dev.haliphax.ktorHttp.data.DemoData
+import dev.haliphax.ktorHttp.helpers.adminClient
+import dev.haliphax.ktorHttp.helpers.badClient
+import dev.haliphax.ktorHttp.helpers.basicClient
+import dev.haliphax.ktorHttp.helpers.jsonClient
+import dev.haliphax.ktorHttp.helpers.koinTest
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
@@ -16,20 +20,12 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.contentType
 import io.ktor.server.config.ApplicationConfig
-import io.ktor.server.testing.ApplicationTestBuilder
 import io.mockk.coEvery
 import io.mockk.coVerify
 import kotlinx.coroutines.runBlocking
 import org.koin.core.parameter.parametersOf
 import org.koin.java.KoinJavaComponent.inject
-import org.koin.ksp.generated.module
 import org.koin.test.KoinTest
-
-fun koinTest(block: suspend ApplicationTestBuilder.() -> Unit) =
-  koinTestApplication(
-    listOf(Dependencies().module, TestDependencies().module),
-    block
-  )
 
 class ApplicationTest : KoinTest, DescribeSpec({
   describe("application") {
