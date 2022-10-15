@@ -20,3 +20,9 @@ fun koinTestApplication(
     stopKoin()
   }
 }
+
+fun koinTestApplication(
+  vararg modules: Module,
+  block: suspend ApplicationTestBuilder.() -> Unit
+) =
+  koinTestApplication(modules.asList(), block)
