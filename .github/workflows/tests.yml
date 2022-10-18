@@ -53,7 +53,7 @@ jobs:
           !**/generated/**
 
   test:
-    name: Unit tests
+    name: Tests
     needs: changes
     if: ${{ needs.changes.outputs.src == 'true' }}
     runs-on: ubuntu-latest
@@ -72,15 +72,15 @@ jobs:
         distribution: temurin
         java-version: 17
 
-    - name: Run unit tests
+    - name: Run tests
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: testAggregateTestReport
+        arguments: allTest
 
     - name: Add coverage to PR
       uses: madrapps/jacoco-report@v1.3
       with:
-        paths: ${{ github.workspace }}/build/reports/jacoco/jacocoMergedTestReport/jacocoMergedTestReport.xml
+        paths: ${{ github.workspace }}/build/reports/jacoco/aggregate/jacocoTestReport.xml
         token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
@@ -103,12 +103,12 @@ jobs:
         # reuse static assets (css, js, images)
         [ -d docs/static ] && rm -rf docs/static
         mkdir -p docs/static
-        mv build/reports/tests/unit-test/aggregated-results/{css,js} docs/static
-        mv build/reports/jacoco/jacocoMergedTestReport/html/jacoco-resources docs/static
+        mv build/reports/tests/all/{css,js} docs/static
+        mv build/reports/jacoco/aggregate/html/jacoco-resources docs/static
 
         # copy reports to rev folder
-        mv build/reports/tests/unit-test/aggregated-results docs/$REV
-        mv build/reports/jacoco/jacocoMergedTestReport/html docs/$REV/coverage
+        mv build/reports/tests/all docs/$REV
+        mv build/reports/jacoco/aggregate/html docs/$REV/coverage
 
         # link static assets to rev folder
         rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
