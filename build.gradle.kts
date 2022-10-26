@@ -1,5 +1,3 @@
-@file:Suppress("UnstableApiUsage")
-
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
@@ -8,23 +6,20 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   `test-report-aggregation`
   application
-  id("com.github.johnrengelman.shadow") apply false
   id("com.google.devtools.ksp")
-  id("com.google.protobuf") apply false
   id("org.jetbrains.kotlin.jvm")
   id("org.jetbrains.kotlin.plugin.serialization")
   id("org.jlleitschuh.gradle.ktlint")
   id("org.kordamp.gradle.jacoco")
-  idea
   java
+
+  // load for use in subprojects but do not apply these to the root project
+  id("com.github.johnrengelman.shadow") apply false
+  id("com.google.protobuf") apply false
 }
 
 // aggregate reports from all subprojects
-dependencies {
-  subprojects.forEach {
-    testReportAggregation(it)
-  }
-}
+dependencies { subprojects.forEach { testReportAggregation(it) } }
 
 allprojects {
   group = "dev.haliphax"
@@ -45,37 +40,26 @@ allprojects {
     ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
   }
 
-  config {
-    coverage {
-      jacoco {
-        excludes = setOf(
-          "**/*$*$*.class",
-          "**/dev/haliphax/*/Dependencies.class",
-          "**/dev/haliphax/*/MainKt.class",
-          "**/dev/haliphax/*/aliases/**",
-          "**/dev/haliphax/common/testing/KotestConfiguration.class",
-          "**/generated/**",
-          "**/proto/**"
-        )
-      }
-    }
-  }
-
+  // version targeting
   java { sourceCompatibility = JavaVersion.VERSION_1_8 }
+  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
 
+  // exclude generated source from ktlint targets
   ktlint.filter { exclude { it.file.path.contains("/generated/") } }
 
+  // integrationTest test suite
+  @Suppress("UnstableApiUsage")
   testing.suites.create<JvmTestSuite>("integrationTest") {
     testType.set(TestSuiteType.INTEGRATION_TEST)
     dependencies { implementation(project) }
   }
 
-  sourceSets.main {
-    // include generated KSP sources
-    java.srcDirs("build/generated/ksp/main/kotlin")
-  }
+  // include generated KSP sources
+  sourceSets.main { java.srcDirs("build/generated/ksp/main/kotlin") }
 
+  // integrationTest source set
   sourceSets.named("integrationTest") {
+    // include compiled classes from main source set
     compileClasspath += sourceSets.main.get().compileClasspath
   }
 
@@ -85,46 +69,63 @@ allprojects {
     isReproducibleFileOrder = true
   }
 
-  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+  // testing configuration
+  tasks.withType<Test> {
+    useJUnitPlatform { includeEngines() }
+    testLogging {
+      showCauses = true
+      showStackTraces = true
+      exceptionFormat = TestExceptionFormat.SHORT
+      events(
+        TestLogEvent.PASSED,
+        TestLogEvent.FAILED
+      )
+    }
+  }
 
-  afterEvaluate {
-    tasks.withType<Test> {
-      useJUnitPlatform { includeEngines() }
-      testLogging {
-        showCauses = true
-        showStackTraces = true
-        exceptionFormat = TestExceptionFormat.SHORT
-        events(
-          TestLogEvent.PASSED,
-          TestLogEvent.FAILED
+  // common jacoco report settings
+  tasks.withType<JacocoReport> {
+    reports {
+      html.required.set(true)
+      xml.required.set(true)
+    }
+  }
+
+  // common jacoco report base settings
+  tasks.withType<JacocoReportBase> {
+    classDirectories.setFrom(
+      classDirectories.asFileTree.matching {
+        // exclude these files from coverage calculation/reporting
+        exclude(
+          "**/*$*$*.class",
+          "**/dev/haliphax/*/Dependencies.class",
+          "**/dev/haliphax/*/MainKt.class",
+          "**/dev/haliphax/*/aliases/**",
+          "**/dev/haliphax/common/testing/KotestConfiguration.class",
+          "**/generated/**",
+          "**/proto/**"
         )
-      }
-    }
-
-    tasks.withType<JacocoReport> {
-      reports {
-        html.required.set(true)
-        xml.required.set(true)
-      }
-    }
+      }.files
+    )
   }
 }
 
+// subprojects shadowJar config
 subprojects {
-  if (listOf("common", "proto").contains(name)) { return@subprojects }
+  // skip non-application projects
+  if (listOf("common", "proto").contains(name)) return@subprojects
 
   apply(plugin = "application")
   apply(plugin = "com.github.johnrengelman.shadow")
 
-  tasks.build { dependsOn(tasks.withType<ShadowJar>()) }
+  tasks.build { finalizedBy(tasks.withType<ShadowJar>()) }
   tasks.jar {
-    manifest {
-      attributes(mapOf("mainClass" to application.mainClass))
-    }
+    manifest { attributes(mapOf("mainClass" to application.mainClass)) }
   }
 }
 
 afterEvaluate {
+  // task to run all test and coverage report tasks for entire project
   val allTest = tasks.register<TestReport>("allTest") {
     group = LifecycleBasePlugin.VERIFICATION_GROUP
     dependsOn(
@@ -132,9 +133,11 @@ afterEvaluate {
       tasks.testAggregateTestReport
     )
     finalizedBy(tasks.named("aggregateJacocoReport"))
+    @Suppress("UnstableApiUsage")
     testResults.setFrom(
       subprojects.map { it.tasks.withType<Test>() }.flatten()
     )
+    @Suppress("UnstableApiUsage")
     destinationDirectory.set(file("$buildDir/reports/tests/all"))
   }
 
