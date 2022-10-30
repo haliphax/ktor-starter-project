@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
@@ -118,7 +117,6 @@ subprojects {
   apply(plugin = "application")
   apply(plugin = "com.github.johnrengelman.shadow")
 
-  tasks.build { finalizedBy(tasks.withType<ShadowJar>()) }
   tasks.jar {
     manifest { attributes(mapOf("mainClass" to application.mainClass)) }
   }
