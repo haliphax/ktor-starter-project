@@ -46,6 +46,17 @@ allprojects {
   // exclude generated source from ktlint targets
   ktlint.filter { exclude { it.file.path.contains("/generated/") } }
 
+  // jacoco exclusions
+  config.coverage.jacoco.excludes = setOf(
+    "**/*$*$*.class",
+    "**/dev/haliphax/*/Dependencies.class",
+    "**/dev/haliphax/*/MainKt.class",
+    "**/dev/haliphax/*/aliases/**",
+    "**/dev/haliphax/common/testing/KotestConfiguration.class",
+    "**/generated/**",
+    "**/proto/**"
+  )
+
   // integrationTest test suite
   @Suppress("UnstableApiUsage")
   testing.suites.create<JvmTestSuite>("integrationTest") {
@@ -88,24 +99,6 @@ allprojects {
       html.required.set(true)
       xml.required.set(true)
     }
-  }
-
-  // common jacoco report base settings
-  tasks.withType<JacocoReportBase> {
-    classDirectories.setFrom(
-      classDirectories.asFileTree.matching {
-        // exclude these files from coverage calculation/reporting
-        exclude(
-          "**/*$*$*.class",
-          "**/dev/haliphax/*/Dependencies.class",
-          "**/dev/haliphax/*/MainKt.class",
-          "**/dev/haliphax/*/aliases/**",
-          "**/dev/haliphax/common/testing/KotestConfiguration.class",
-          "**/generated/**",
-          "**/proto/**"
-        )
-      }.files
-    )
   }
 }
 
