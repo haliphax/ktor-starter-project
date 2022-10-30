@@ -31,7 +31,7 @@ dependencyResolutionManagement {
   versionCatalogs {
     create("common") {
       library("javax-annotation", "javax.annotation", "javax.annotation-api")
-        .version("1.3.1")
+        .version("1.3.2")
       library("koin", "io.insert-koin", "koin-core")
         .version(koinVersion)
       library("koin-annotations", "io.insert-koin", "koin-annotations")
