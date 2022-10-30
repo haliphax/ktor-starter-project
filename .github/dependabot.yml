@@ -5,7 +5,3 @@ updates:
   - package-ecosystem: "github-actions"
     directory: "/.github/workflows"
 
-  - package-ecosystem: "gradle"
-    directory: "/"
-    schedule:
-      interval: "weekly"
