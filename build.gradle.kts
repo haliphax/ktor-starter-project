@@ -49,10 +49,10 @@ allprojects {
   // jacoco exclusions
   config.coverage.jacoco.excludes = setOf(
     "**/*$*$*.class",
-    "**/dev/haliphax/**/Dependencies*.class",
-    "**/dev/haliphax/**/MainKt.class",
-    "**/dev/haliphax/**/aliases/**",
-    "**/dev/haliphax/common/testing/KotestConfiguration.class",
+    "**/Dependencies*.class",
+    "**/KotestConfiguration.class",
+    "**/MainKt.class",
+    "**/aliases/**",
     "**/generated/**",
     "**/proto/**"
   )
