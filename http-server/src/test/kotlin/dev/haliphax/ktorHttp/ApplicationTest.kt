@@ -8,13 +8,13 @@ import dev.haliphax.ktorHttp.helpers.badClient
 import dev.haliphax.ktorHttp.helpers.basicClient
 import dev.haliphax.ktorHttp.helpers.jsonClient
 import dev.haliphax.ktorHttp.helpers.koinTest
-import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
@@ -128,15 +128,16 @@ class ApplicationTest : KoinTest, DescribeSpec({
       it("should refuse invalid JSON data") {
         koinTest {
           val client = jsonClient()
+          val response: HttpResponse
 
-          shouldThrowAny {
-            runBlocking {
-              client.post("/data") {
-                contentType(ContentType.Application.Json)
-                setBody("{\"badprop\":\"1\"}")
-              }
+          runBlocking {
+            response = client.post("/data") {
+              contentType(ContentType.Application.Json)
+              setBody("{\"unknown\":true}")
             }
           }
+
+          response.status.value shouldBe 400
         }
       }
     }
