@@ -203,7 +203,9 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "root"
-include("grpc-server")
-include("http-server")
-include("proto")
-include("common")
+include(
+  "grpc-server",
+  "http-server",
+  "proto",
+  "common"
+)
