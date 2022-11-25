@@ -61,7 +61,7 @@ allprojects {
   @Suppress("UnstableApiUsage")
   testing.suites.create<JvmTestSuite>("integrationTest") {
     testType.set(TestSuiteType.INTEGRATION_TEST)
-    dependencies { implementation(project) }
+    dependencies { implementation(project()) }
   }
 
   // include generated KSP sources
