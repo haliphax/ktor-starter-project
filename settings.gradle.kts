@@ -5,7 +5,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("7.1.2")
-    id("com.google.devtools.ksp").version("1.6.21-1.0.6")
+    id("com.google.devtools.ksp").version("1.7.21-1.0.8")
     id("com.google.protobuf").version("0.8.19")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
@@ -18,6 +18,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
   val coroutinesVersion: String by settings
+  val koinKspVersion: String by settings
   val koinVersion: String by settings
   val kotlinVersion: String by settings
   val kotestVersion: String by settings
@@ -35,7 +36,7 @@ dependencyResolutionManagement {
       library("koin", "io.insert-koin", "koin-core")
         .version(koinVersion)
       library("koin-annotations", "io.insert-koin", "koin-annotations")
-        .version("1.0.3")
+        .version(koinKspVersion)
       library("koin-ktor", "io.insert-koin", "koin-ktor")
         .version(koinVersion)
       library("kotlin", "org.jetbrains.kotlin", "kotlin-bom")
@@ -43,7 +44,7 @@ dependencyResolutionManagement {
       library("kotlinx-s18n-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json")
         .version("1.4.1")
       library("ksp", "io.insert-koin", "koin-ksp-compiler")
-        .version("1.0.3")
+        .version(koinKspVersion)
       library("ktor-s18n-json", "io.ktor", "ktor-serialization-kotlinx-json")
         .version(ktorVersion)
       library("logback", "ch.qos.logback", "logback-classic")
@@ -202,7 +203,9 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "root"
-include("grpc-server")
-include("http-server")
-include("proto")
-include("common")
+include(
+  "grpc-server",
+  "http-server",
+  "proto",
+  "common"
+)
