@@ -149,18 +149,16 @@ class ApplicationTest : KoinTest, DescribeSpec({
               parametersOf(ApplicationConfig(null))
             }
 
-          coEvery { grpcStub.demo(any()) } answers {
+          coEvery { grpcStub.demo(any()) } returns(
             DemoResponse.newBuilder().setMessage("Hi, hungry, I'm Dad").build()
+            )
+
+          jsonClient().post("/grpc") {
+            contentType(ContentType.Application.Json)
+            setBody(DemoData("hungry"))
           }
 
-          runBlocking {
-            jsonClient().post("/grpc") {
-              contentType(ContentType.Application.Json)
-              setBody(DemoData("hungry"))
-            }
-          }
-
-          coVerify { grpcStub.demo(any()) }
+          coVerify { grpcStub.demo(any(), any()) }
         }
       }
     }
