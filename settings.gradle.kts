@@ -11,7 +11,7 @@ pluginManagement {
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
     id("org.jlleitschuh.gradle.ktlint").version("11.0.0")
-    id("org.kordamp.gradle.jacoco").version("0.46.0")
+    id("org.kordamp.gradle.jacoco").version("0.47.0")
     id("test-report-aggregation")
   }
 }
