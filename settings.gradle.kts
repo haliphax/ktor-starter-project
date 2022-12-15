@@ -6,7 +6,7 @@ pluginManagement {
   plugins {
     id("com.github.johnrengelman.shadow").version("7.1.2")
     id("com.google.devtools.ksp").version("1.7.22-1.0.8")
-    id("com.google.protobuf").version("0.8.19")
+    id("com.google.protobuf").version("0.9.1")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
