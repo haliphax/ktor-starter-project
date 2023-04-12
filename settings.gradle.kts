@@ -8,7 +8,6 @@ pluginManagement {
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
-    id("org.jlleitschuh.gradle.ktlint").version("11.3.1")
     id("org.kordamp.gradle.jacoco").version("0.50.0")
     id("test-report-aggregation")
   }
