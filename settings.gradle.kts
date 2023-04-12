@@ -1,5 +1,3 @@
-enableFeaturePreview("VERSION_CATALOGS")
-
 pluginManagement {
   val kotlinVersion: String by settings
 
@@ -171,7 +169,7 @@ dependencyResolutionManagement {
 
       library("junit-api", "org.junit.jupiter", "junit-jupiter-api")
         .version(junitVersion)
-      library("junit-engine", "org.junit.jupiter", "junit-jupiter-engine")
+      library("junit-jupiter", "org.junit.jupiter", "junit-jupiter")
         .version(junitVersion)
       library("koin-test", "io.insert-koin", "koin-test")
         .version(koinVersion)
@@ -190,6 +188,7 @@ dependencyResolutionManagement {
         "all",
         listOf(
           "junit-api",
+          "junit-jupiter",
           "koin-test",
           "koin-test-junit",
           "kotest-assertion",
