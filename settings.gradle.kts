@@ -2,7 +2,7 @@ pluginManagement {
   val kotlinVersion: String by settings
 
   plugins {
-    id("com.github.johnrengelman.shadow").version("7.1.2")
+    id("com.github.johnrengelman.shadow").version("8.1.1")
     id("com.google.devtools.ksp").version("1.8.20-1.0.10")
     id("com.google.protobuf").version("0.9.2")
     id("idea")
