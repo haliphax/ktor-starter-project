@@ -8,7 +8,6 @@ plugins {
   id("com.google.devtools.ksp")
   id("org.jetbrains.kotlin.jvm")
   id("org.jetbrains.kotlin.plugin.serialization")
-  id("org.jlleitschuh.gradle.ktlint")
   id("org.kordamp.gradle.jacoco")
   java
 
@@ -29,7 +28,6 @@ allprojects {
   apply(plugin = "java")
   apply(plugin = "org.jetbrains.kotlin.jvm")
   apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
-  apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
   repositories { mavenCentral() }
 
@@ -43,9 +41,6 @@ allprojects {
   java { sourceCompatibility = JavaVersion.VERSION_1_8 }
   tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
 
-  // exclude generated source from ktlint targets
-  ktlint.filter { exclude { it.file.path.contains("/generated/") } }
-
   // jacoco exclusions
   config.coverage.jacoco.excludes = setOf(
     "**/*$*$*.class",
@@ -57,10 +52,17 @@ allprojects {
     "**/proto/**"
   )
 
+  // unit test suite
+  @Suppress("UnstableApiUsage")
+  testing.suites.named<JvmTestSuite>("test") {
+    useJUnitJupiter()
+  }
+
   // integrationTest test suite
   @Suppress("UnstableApiUsage")
   testing.suites.create<JvmTestSuite>("integrationTest") {
     testType.set(TestSuiteType.INTEGRATION_TEST)
+    useJUnitJupiter()
     dependencies { implementation(project()) }
   }
 
@@ -81,7 +83,6 @@ allprojects {
 
   // testing configuration
   tasks.withType<Test> {
-    useJUnitPlatform { includeEngines() }
     testLogging {
       showCauses = true
       showStackTraces = true
@@ -124,11 +125,9 @@ afterEvaluate {
       tasks.testAggregateTestReport
     )
     finalizedBy(tasks.named("aggregateJacocoReport"))
-    @Suppress("UnstableApiUsage")
     testResults.setFrom(
       subprojects.map { it.tasks.withType<Test>() }.flatten()
     )
-    @Suppress("UnstableApiUsage")
     destinationDirectory.set(file("$buildDir/reports/tests/all"))
   }
 
