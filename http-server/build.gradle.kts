@@ -17,13 +17,3 @@ dependencies {
 application {
   mainClass.set("io.ktor.server.netty.EngineMain")
 }
-
-tasks.jacocoTestReport {
-  classDirectories.setFrom(
-    classDirectories.asFileTree.matching {
-      exclude(
-        "**/dev/haliphax/ktorHttp/modules/dependencies/DependenciesKt.class"
-      )
-    }.files
-  )
-}
