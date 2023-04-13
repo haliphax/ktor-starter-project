@@ -11,7 +11,7 @@ import org.koin.core.annotation.Named
 @Factory
 @Named("DemoService")
 class DemoService(
-  private val demoController: DemoController
+  private val demoController: DemoController,
 ) :
   DemoServiceGrpcKt.DemoServiceCoroutineImplBase(),
   // allows finding this component via BindableService binding qualifier

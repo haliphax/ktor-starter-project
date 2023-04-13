@@ -10,7 +10,7 @@ val jacocoExcludes = setOf(
   "**/dev/haliphax/**/aliases/**",
   "**/dev/haliphax/common/testing/KotestConfiguration.class",
   "**/generated/**",
-  "**/proto/**"
+  "**/proto/**",
 )
 
 plugins {
@@ -89,7 +89,7 @@ allprojects {
       targets.all {
         testTask {
           testClassesDirs = files(
-            suites.map { "$buildDir/classes/kotlin/${it.name}" }
+            suites.map { "$buildDir/classes/kotlin/${it.name}" },
           )
           extensions.configure<JacocoTaskExtension> {
             setDestinationFile(file("$buildDir/jacoco/allTest.exec"))
@@ -110,7 +110,7 @@ allprojects {
             exceptionFormat = TestExceptionFormat.SHORT
             events(
               TestLogEvent.PASSED,
-              TestLogEvent.FAILED
+              TestLogEvent.FAILED,
             )
           }
         }
@@ -129,7 +129,7 @@ allprojects {
         }
 
         classDirectories.setFrom(
-          classDirectories.asFileTree.matching { exclude(jacocoExcludes) }.files
+          classDirectories.asFileTree.matching { exclude(jacocoExcludes) }.files,
         )
       }
     }
@@ -145,12 +145,12 @@ allprojects {
     classDirectories.setFrom(
       subprojects.map {
         fileTree("${it.buildDir}/classes").exclude(jacocoExcludes)
-      }
+      },
     )
     executionData.setFrom(
       subprojects.map {
         fileTree(it.buildDir).include("/jacoco/allTest.exec")
-      }
+      },
     )
     sourceDirectories.setFrom(allSource)
   }
@@ -167,12 +167,12 @@ allprojects {
     classDirectories.setFrom(
       subprojects.map {
         fileTree("${it.buildDir}/classes").exclude(jacocoExcludes)
-      }
+      },
     )
     executionData.setFrom(
       subprojects.map {
         fileTree(it.buildDir).include("/jacoco/allTest.exec")
-      }
+      },
     )
     sourceDirectories.setFrom(allSource)
 
@@ -184,7 +184,7 @@ allprojects {
   tasks.check {
     dependsOn(
       tasks.named("allTest"),
-      tasks.named("allTestCoverageVerification")
+      tasks.named("allTestCoverageVerification"),
     )
   }
 }

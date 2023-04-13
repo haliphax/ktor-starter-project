@@ -58,8 +58,8 @@ dependencyResolutionManagement {
           "kotlinx-s18n-json",
           "ksp",
           "ktor-s18n-json",
-          "logback"
-        )
+          "logback",
+        ),
       )
     }
 
@@ -76,8 +76,8 @@ dependencyResolutionManagement {
         listOf(
           "auth",
           "content-negotiation",
-          "s18n"
-        )
+          "s18n",
+        ),
       )
     }
 
@@ -91,8 +91,8 @@ dependencyResolutionManagement {
         "core",
         listOf(
           "core",
-          "core-jvm"
-        )
+          "core-jvm",
+        ),
       )
     }
 
@@ -113,8 +113,8 @@ dependencyResolutionManagement {
         listOf(
           "grpc-kotlin-stub",
           "grpc-protobuf",
-          "grpc-stub"
-        )
+          "grpc-stub",
+        ),
       )
 
       bundle(
@@ -124,8 +124,8 @@ dependencyResolutionManagement {
           "grpc-protobuf",
           "grpc-stub",
           "protobuf-java",
-          "protobuf-kotlin"
-        )
+          "protobuf-kotlin",
+        ),
       )
     }
 
@@ -148,8 +148,8 @@ dependencyResolutionManagement {
         listOf(
           "grpc-netty",
           "grpc-services",
-          "netty"
-        )
+          "netty",
+        ),
       )
 
       bundle(
@@ -158,8 +158,8 @@ dependencyResolutionManagement {
           "auth",
           "content-negotiation",
           "core",
-          "netty"
-        )
+          "netty",
+        ),
       )
     }
 
@@ -193,8 +193,8 @@ dependencyResolutionManagement {
           "kotest-assertion",
           "kotest-runner",
           "mockk",
-          "server-test-host"
-        )
+          "server-test-host",
+        ),
       )
     }
   }
@@ -205,5 +205,5 @@ include(
   "grpc-server",
   "http-server",
   "proto",
-  "common"
+  "common",
 )

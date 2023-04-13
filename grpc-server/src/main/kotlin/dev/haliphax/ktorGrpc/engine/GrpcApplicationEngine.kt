@@ -21,7 +21,7 @@ import org.koin.ksp.generated.module
 import java.util.concurrent.TimeUnit
 
 class GrpcApplicationEngine(
-  environment: ApplicationEngineEnvironment
+  environment: ApplicationEngineEnvironment,
 ) : BaseApplicationEngine(environment), HasLog {
   lateinit var server: Server
   private val configuration: Configuration
@@ -50,8 +50,8 @@ class GrpcApplicationEngine(
         .forAddress(
           NetworkAddress(
             environment.config.host,
-            environment.config.port
-          )
+            environment.config.port,
+          ),
         )
         .apply {
           configuration.services.forEach { name ->
