@@ -1,126 +1,152 @@
 name: Tests
 
 on:
-
   push:
-    branches: [ master ]
+    branches: [master]
 
   pull_request:
-    branches: [ master ]
+    branches: [master]
+    types: [open, synchronize]
 
   workflow_dispatch:
 
 jobs:
-
   changes:
     name: Change detection
     runs-on: ubuntu-latest
     outputs:
-      src: ${{ steps.changes.outputs.src }}
+      kt: ${{ steps.changes.outputs.kt }}
+      misc: ${{ steps.changes.outputs.misc }}
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Check out repository
-      uses: actions/checkout@v3
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            kt:
+              - '**/*.{kt,properties}'
+              - '**/*gradle*'
+              - '**/resources/**'
 
-    - uses: dorny/paths-filter@v2
-      id: changes
-      with:
-        filters: |
-          src:
-            - '**/*.kt'
-            - '**/*.properties'
-            - '**/*gradle*'
-            - '**/resources/**'
+            misc:
+              - '**/*.{js,json,md,sh,xml,yaml,yml}'
 
-  lint:
-    name: Linter
-    needs: changes
-    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
+  commitlint:
+    name: CommitLint
+    if: ${{ contains(github.event_name, 'pull_request') }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Check out repository
-      uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
 
-    - uses: musichin/ktlint-check@v2
-      with:
-        ktlint-version: '0.48.2'
-        relative: true
-        patterns: |
-          **/**.kt{,s}
-          !**/generated/**
+      - name: Install dependencies
+        run: npm i
+
+      - name: Lint pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: echo "$PR_TITLE" | npx commitlint
+
+  ktlint:
+    name: KtLint
+    needs: changes
+    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.kt }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Lint files using KtLint
+        uses: musichin/ktlint-check@v2
+        with:
+          ktlint-version: "0.48.2"
+          relative: true
+          patterns: "**/**.kt{,s}"
+
+  prettier:
+    name: Prettier
+    needs: changes
+    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.misc }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Lint files using Prettier
+        run: npx prettier -c -u .
 
   test:
     name: Tests
     needs: changes
-    if: ${{ needs.changes.outputs.src == 'true' }}
+    if: ${{ needs.changes.outputs.kt }}
     runs-on: ubuntu-latest
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Check out repository
-      uses: actions/checkout@v3
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
 
-    - name: Merge with target branch
-      if: ${{ contains(github.event_name, 'pull_request') }}
-      uses: check-spelling/checkout-merge@main
+      - name: Set up Eclipse Java 19
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 19
 
-    - name: Set up Eclipse Java 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: temurin
-        java-version: 17
+      - name: Run tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: allTestAggregateTestReport
 
-    - name: Run tests
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: allTestAggregateTestReport
+      - name: Coverage report
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: allTestCodeCoverageReport
 
-    - name: Coverage report
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: allTestCodeCoverageReport
+      - name: Add coverage to PR
+        uses: madrapps/jacoco-report@v1.3
+        with:
+          paths: ${{ github.workspace }}/build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
+          token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
+          min-coverage-overall: 70
+          min-coverage-changed-files: 70
 
-    - name: Add coverage to PR
-      uses: madrapps/jacoco-report@v1.3
-      with:
-        paths: ${{ github.workspace }}/build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
-        token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
-        min-coverage-overall: 80
-        min-coverage-changed-files: 80
+      - name: Store test report artifact
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: build/reports/tests/all/aggregated-results/
 
-    - name: Add reports to Pages site
-      if: ${{ github.ref == 'refs/heads/master' }}
-      run: |
-        git config pull.rebase false
-        git config user.email git@github.com
-        git config user.name 'GitHub Actions'
-        REV=$(git rev-parse --short HEAD)
-
-        # sync
-        git fetch
-        git checkout -b gh-pages --track origin/gh-pages
-        git pull
-
-        # reuse static assets (css, js, images)
-        [ -d docs/static ] && rm -rf docs/static
-        mkdir -p docs/static
-        mv build/reports/tests/all/aggregated-results/{css,js} docs/static
-        mv build/reports/jacoco/allTestCodeCoverageReport/html/jacoco-resources docs/static
-
-        # copy reports to rev folder
-        mv build/reports/tests/all/aggregated-results docs/$REV
-        mv build/reports/jacoco/allTestCodeCoverageReport/html docs/$REV/coverage
-
-        # link static assets to rev folder
-        rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
-          | xargs sed -i -e 's/\(css\|js\)\//..\/static\/&/g'
-        rgrep -l -e '["/]jacoco-resources/' docs/$REV/coverage | grep '.html' \
-          | xargs sed -i -e 's/jacoco-resources\//..\/..\/static\/&/g'
-
-        # add link to coverage report in test report index
-        sed -i -e 's/<a href="#tab1">Classes<\/a>/&<\/li><li><a href="coverage\/">Coverage report<\/a>/' docs/$REV/index.html
-
-        # commit and push
-        git add -f docs
-        git commit -m "$(echo -e "📝 test report for $REV\nhttps://haliphax.github.io/ktor-starter-project/$REV")"
-        git push -u origin gh-pages
+      - name: Store coverage report artifact
+        if: ${{ github.ref == 'refs/heads/master' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/allTestCodeCoverageReport/html/

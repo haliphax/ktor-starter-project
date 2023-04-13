@@ -1,6 +1,8 @@
-**/bin/
-.gradle/
-.idea/
-.vscode/
+/.cache/
+/.gradle/
+/.idea/
+/.vscode/
+/docs/
+/node_modules/
+bin/
 build/
-docs/

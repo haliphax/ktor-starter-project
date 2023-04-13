@@ -1,16 +1,13 @@
 name: Retention
 
 on:
-
   workflow_dispatch:
 
   push:
-    branches: [ gh-pages ]
+    branches: [gh-pages]
 
 jobs:
-
   none:
     runs-on: ubuntu-latest
     steps:
-
-    - run: echo "see gh-pages branch"
+      - run: echo "see gh-pages branch"

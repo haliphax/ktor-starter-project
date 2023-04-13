@@ -1,6 +1,14 @@
-# ktor-starter-project
+# Ktor starter project
 
-A very basic [ktor] project with some convenient configuration and structure:
+A very basic [ktor] project with some convenient configuration and structure
+
+## Prerequisites
+
+You will need a JDK that matches the version used by the project. (The current
+version is `19`.) The project is primarily developed and tested against the
+[Temurin] JDK distribution from [Adoptium].
+
+## Features
 
 - HTTP server with separate plugins for authentication, routing, and
   serialization
@@ -15,21 +23,22 @@ A very basic [ktor] project with some convenient configuration and structure:
 - Unified `allTest` testing suite (contains all other testing suites), with
   associated coverage report and verification tasks
 - [GitHub Actions workflow] for pull requests and merges
-  - Runs [ktlint] check against source
+  - Runs [ktlint] and [prettier] checks against files
   - Executes unit and integration tests
-  - Delivers coverage reports to [GitHub Pages]
+  - Stores test and coverage reports as [artifacts] for perusal
 
-
-[ktor]: https://ktor.io
-[gRPC]: https://grpc.io
-[Koin]: https://insert-koin.io
-[pluginManagement]: https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_management
-[Version catalog]: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog
-[MockK]: https://mock.io
+[adoptium]: https://adoptium.net
+[artifacts]: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts#about-workflow-artifacts
+[github actions workflow]: https://docs.github.com/en/actions/using-workflows/about-workflows
+[grpc]: https://grpc.io
+[jacoco]: https://www.jacoco.org/jacoco
+[koin]: https://insert-koin.io
 [kotest]: https://kotest.io
-[JaCoCo]: https://www.jacoco.org/jacoco
-[Test report aggregation]: https://docs.gradle.org/current/userguide/test_report_aggregation_plugin.html
-[GitHub Actions workflow]: https://docs.github.com/en/actions/using-workflows/about-workflows
 [ktlint]: https://ktlint.github.io
-[GitHub Pages]: https://pages.github.com
-
+[ktor]: https://ktor.io
+[mockk]: https://mock.io
+[pluginmanagement]: https://docs.gradle.org/current/userguide/plugins.html#sec:plugin_management
+[prettier]: https://prettier.io
+[temurin]: https://adoptium.net/temurin/releases/?version=19
+[test report aggregation]: https://docs.gradle.org/current/userguide/test_report_aggregation_plugin.html
+[version catalog]: https://docs.gradle.org/current/userguide/platforms.html#sub:version-catalog

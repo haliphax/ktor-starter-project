@@ -1,0 +1,18 @@
+repos:
+  - repo: local
+    hooks:
+      - id: ktlint
+        name: ktlint
+        entry: scripts/ktlint.sh
+        language: system
+        types: [text]
+        files: \.kts?$
+        require_serial: true
+
+      - id: prettier
+        name: prettier
+        entry: scripts/prettier.sh
+        exclude: \.kts?$
+        language: system
+        types: [text]
+        require_serial: true
