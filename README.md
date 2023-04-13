@@ -1,6 +1,6 @@
-# Ktor starter project
+# Ktor reference project implementation
 
-A very basic [ktor] project with some convenient configuration and structure
+> A very basic [ktor] project with some convenient configuration and structure
 
 ## Prerequisites
 
