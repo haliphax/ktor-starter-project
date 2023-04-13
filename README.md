@@ -1,21 +1,23 @@
 # ktor-starter-project
 
-A very basic [ktor][] project with some convenient configuration and structure:
+A very basic [ktor] project with some convenient configuration and structure:
 
 - HTTP server with separate plugins for authentication, routing, and
   serialization
-- Coroutine-based [gRPC][] server engine with demonstration service
-- [Koin][] for annotation-driven dependency injection
+- Coroutine-based [gRPC] server engine with demonstration service
+- [Koin] for annotation-driven dependency injection
 - Shared Gradle plugins, project dependencies, and build configuration
-  - [pluginManagement][] and scripted configuration for plugins
-  - [Version catalog][] and scripted configuration for dependencies
-- [MockK][] and [kotest][] libraries for coherent unit tests
-- [JaCoCo][] test coverage plugin with reasonable configuration
-- [Test report aggregation][] for collecting test reports for subprojects
-- [GitHub Actions workflow][] for pull requests and merges
-  - Runs [ktlint][] check against source
-  - Executes unit tests
-  - Delivers coverage reports to [GitHub Pages][]
+  - [pluginManagement] and scripted configuration for plugins
+  - [Version catalog] and scripted configuration for dependencies
+- [MockK] and [kotest] libraries for coherent unit tests
+- [JaCoCo] test coverage plugin with reasonable configuration
+- [Test report aggregation] for collecting test reports for subprojects
+- Unified `allTest` testing suite (contains all other testing suites), with
+  associated coverage report and verification tasks
+- [GitHub Actions workflow] for pull requests and merges
+  - Runs [ktlint] check against source
+  - Executes unit and integration tests
+  - Delivers coverage reports to [GitHub Pages]
 
 
 [ktor]: https://ktor.io
