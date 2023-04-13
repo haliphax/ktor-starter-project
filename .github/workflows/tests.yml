@@ -130,6 +130,7 @@ jobs:
           arguments: allTestCodeCoverageReport
 
       - name: Add coverage to PR
+        if: ${{ contains(github.event_name, 'pull_request') }}
         uses: madrapps/jacoco-report@v1.3
         with:
           paths: ${{ github.workspace }}/build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
@@ -138,14 +139,12 @@ jobs:
           min-coverage-changed-files: 70
 
       - name: Store test report artifact
-        if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v3
         with:
           name: test-report
           path: build/reports/tests/all/aggregated-results/
 
       - name: Store coverage report artifact
-        if: ${{ github.ref == 'refs/heads/master' }}
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
