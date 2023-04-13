@@ -89,10 +89,8 @@ jobs:
         min-coverage-changed-files: 80
 
     - name: Add reports to Pages site
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: |
-        # only run on master branch (merge)
-        [[ "$(git branch --show-current)" == "master" ]] || exit 0
-
         git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
