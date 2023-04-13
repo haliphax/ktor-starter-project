@@ -34,3 +34,8 @@ protobuf {
     }
   }
 }
+
+// declare explicit dependency to satisfy "allTest" testing suite
+tasks.getByName("extractIncludeAllTestProto") {
+  dependsOn(tasks.compileKotlin)
+}

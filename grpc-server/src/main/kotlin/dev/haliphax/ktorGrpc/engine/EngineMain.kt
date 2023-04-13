@@ -20,13 +20,13 @@ object EngineMain : HasLog {
           mapModules(classLoader, it.getList()).map { module ->
             module.value.apply { loadedModules[module.key] = this }
           }
-        } ?: emptyList()
+        } ?: emptyList(),
       )
     }
 
   private fun mapModules(
     classLoader: ClassLoader,
-    modules: List<String>
+    modules: List<String>,
   ): Map<String, Module> =
     modules.associateWith { fqn ->
       val dotIndex = fqn.lastIndexOf('.')

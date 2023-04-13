@@ -16,7 +16,7 @@ class DemoServiceTest : DescribeSpec({
     beforeContainer {
       demoController = mockk(relaxed = true)
       demoService = DemoService(
-        demoController = demoController
+        demoController = demoController,
       )
     }
 

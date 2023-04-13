@@ -9,5 +9,5 @@ import org.koin.ksp.generated.module
 fun koinTest(block: suspend ApplicationTestBuilder.() -> Unit) =
   koinTestApplication(
     listOf(Dependencies().module, TestDependencies().module),
-    block
+    block,
   )

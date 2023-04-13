@@ -8,7 +8,7 @@ import org.koin.core.module.Module
 
 fun koinTestApplication(
   modules: List<Module>,
-  block: suspend ApplicationTestBuilder.() -> Unit
+  block: suspend ApplicationTestBuilder.() -> Unit,
 ) {
   ApplicationTestBuilder().apply {
     startKoin {
@@ -23,6 +23,6 @@ fun koinTestApplication(
 
 fun koinTestApplication(
   vararg modules: Module,
-  block: suspend ApplicationTestBuilder.() -> Unit
+  block: suspend ApplicationTestBuilder.() -> Unit,
 ) =
   koinTestApplication(modules.asList(), block)

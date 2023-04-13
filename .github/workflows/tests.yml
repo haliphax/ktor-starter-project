@@ -28,10 +28,9 @@ jobs:
         filters: |
           src:
             - '**/*.kt'
-            - '**/*.kts'
             - '**/*.properties'
-            - '**/resources/*.xml'
-            - 'gradle*'
+            - '**/*gradle*'
+            - '**/resources/**'
 
   lint:
     name: Linter
@@ -45,11 +44,10 @@ jobs:
 
     - uses: musichin/ktlint-check@v2
       with:
-        ktlint-version: '0.47.1'
+        ktlint-version: '0.48.2'
         relative: true
-        experimental: true
         patterns: |
-          **/**.kt
+          **/**.kt{,s}
           !**/generated/**
 
   test:
@@ -75,21 +73,24 @@ jobs:
     - name: Run tests
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: allTest
+        arguments: allTestAggregateTestReport
+
+    - name: Coverage report
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: allTestCodeCoverageReport
 
     - name: Add coverage to PR
       uses: madrapps/jacoco-report@v1.3
       with:
-        paths: ${{ github.workspace }}/build/reports/jacoco/aggregate/jacocoTestReport.xml
+        paths: ${{ github.workspace }}/build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
         token: ${{ secrets.JACOCO_GITHUB_TOKEN }}
         min-coverage-overall: 80
         min-coverage-changed-files: 80
 
     - name: Add reports to Pages site
+      if: ${{ github.ref == 'refs/heads/master' }}
       run: |
-        # only run on master branch (merge)
-        [[ "$(git branch --show-current)" == "master" ]] || exit 0
-
         git config pull.rebase false
         git config user.email git@github.com
         git config user.name 'GitHub Actions'
@@ -103,12 +104,12 @@ jobs:
         # reuse static assets (css, js, images)
         [ -d docs/static ] && rm -rf docs/static
         mkdir -p docs/static
-        mv build/reports/tests/all/{css,js} docs/static
-        mv build/reports/jacoco/aggregate/html/jacoco-resources docs/static
+        mv build/reports/tests/all/aggregated-results/{css,js} docs/static
+        mv build/reports/jacoco/allTestCodeCoverageReport/html/jacoco-resources docs/static
 
         # copy reports to rev folder
-        mv build/reports/tests/all docs/$REV
-        mv build/reports/jacoco/aggregate/html docs/$REV/coverage
+        mv build/reports/tests/all/aggregated-results docs/$REV
+        mv build/reports/jacoco/allTestCodeCoverageReport/html docs/$REV/coverage
 
         # link static assets to rev folder
         rgrep -l -e '["/]\(css\|js\)/' docs/$REV | grep '.html' \
