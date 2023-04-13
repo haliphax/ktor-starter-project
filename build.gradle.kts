@@ -92,7 +92,7 @@ allprojects {
             suites.map { "$buildDir/classes/kotlin/${it.name}" },
           )
           extensions.configure<JacocoTaskExtension> {
-            setDestinationFile(file("$buildDir/jacoco/allTest.exec"))
+            destinationFile = file("$buildDir/jacoco/allTest.exec")
           }
         }
       }
@@ -203,8 +203,13 @@ subprojects {
   }
 
   // version targeting
-  java { sourceCompatibility = JavaVersion.VERSION_1_8 }
-  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "1.8" }
+  java {
+    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_19
+    toolchain { languageVersion.set(JavaLanguageVersion.of(19)) }
+  }
+
+  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "19" }
 
   sourceSets {
     main {

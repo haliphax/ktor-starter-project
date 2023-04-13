@@ -14,41 +14,38 @@
 name: Codacy Security Scan
 
 on:
-
   push:
-    branches: [ "master" ]
+    branches: ["master"]
 
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
   schedule:
-    - cron: '29 9 * * 6'
+    - cron: "29 9 * * 6"
 
 permissions:
   contents: read
 
 jobs:
-
   changes:
     name: Change detection
     runs-on: ubuntu-latest
     outputs:
       src: ${{ steps.changes.outputs.src }}
     steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
 
-    - name: Check out repository
-      uses: actions/checkout@v3
-
-    - uses: dorny/paths-filter@v2
-      id: changes
-      with:
-        filters: |
-          src:
-            - '**/*.kt'
-            - '**/*.kts'
-            - '**/*.properties'
-            - '**/resources/*.xml'
-            - 'gradle*'
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            src:
+              - '**/*.kt'
+              - '**/*.kts'
+              - '**/*.properties'
+              - '**/resources/*.xml'
+              - 'gradle*'
 
   codacy-security-scan:
     needs: changes
@@ -85,4 +82,3 @@ jobs:
         uses: github/codeql-action/upload-sarif@v2
         with:
           sarif_file: results.sarif
-
