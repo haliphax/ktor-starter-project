@@ -41,7 +41,10 @@ jobs:
     needs: changes
     if: |
       ${{
-        github.ref != 'refs/heads/master'
+        (
+          contains(github.event_name, 'pull_request')
+          || contains(github.event_name, 'workflow_dispatch')
+        )
         && needs.changes.outputs.kt
       }}
     runs-on: ubuntu-latest
@@ -128,4 +131,5 @@ jobs:
         uses: coverallsapp/github-action@v2
         with:
           base-path: src/main/kotlin
-          file: build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
+          file: ${{ github.workspace }}/build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml
+          format: jacoco
