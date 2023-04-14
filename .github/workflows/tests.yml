@@ -10,6 +10,8 @@ on:
 
   workflow_dispatch:
 
+concurrency: ref-${{ github.ref }}
+
 jobs:
   changes:
     name: Change detection
