@@ -4,9 +4,6 @@ on:
   pull_request:
     branches: [master]
 
-  push:
-    branches: [master]
-
   workflow_dispatch:
 
 concurrency:
@@ -39,11 +36,7 @@ jobs:
   build:
     name: Build
     needs: changes
-    if: |
-      ${{
-        needs.changes.outputs.kt
-        && contains(github.event_name, 'pull_request')
-      }}
+    if: ${{ needs.changes.outputs.kt }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
