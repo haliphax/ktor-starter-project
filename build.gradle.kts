@@ -1,6 +1,8 @@
+import jp.gr.java_conf.spica.plugin.gradle.jacoco.JacocoMarkdownTask
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import kotlin.io.path.createTempFile
 
 // common coverage report exclusions
 val jacocoExcludes = setOf(
@@ -16,6 +18,7 @@ val jacocoExcludes = setOf(
 plugins {
   `jacoco-report-aggregation`
   `test-report-aggregation`
+  id("com.github.sakata1222.jacoco-markdown")
   id("com.google.devtools.ksp")
   id("org.jetbrains.kotlin.jvm")
   id("org.jetbrains.kotlin.plugin.serialization") apply false
@@ -37,6 +40,7 @@ allprojects {
   group = "dev.haliphax"
   version = "unspecified"
 
+  apply(plugin = "com.github.sakata1222.jacoco-markdown")
   apply(plugin = "jacoco")
   apply(plugin = "jacoco-report-aggregation")
   apply(plugin = "org.jetbrains.kotlin.jvm")
@@ -191,6 +195,26 @@ allprojects {
     violationRules.rule {
       limit { minimum = "0.7".toBigDecimal() }
     }
+  }
+
+  // markdown coverage report output task for allTest testing suite
+  tasks.create<JacocoMarkdownTask>("allTestCodeCoverageReportMarkdown") {
+    group = LifecycleBasePlugin.VERIFICATION_GROUP
+
+    dependsOn(tasks.withType<JacocoReport>().named("allTestCodeCoverageReport"))
+
+    diffEnabled.set(false)
+    jacocoXml.set(
+      file("$buildDir/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.xml"),
+    )
+    outputJson.set(
+      file("$buildDir/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.json"),
+    )
+    outputMd.set(
+      file("$buildDir/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.md"),
+    )
+    // need a file specified here even though coverage diff is disabled
+    previousJson.set(createTempFile().toFile())
   }
 
   tasks.check {
