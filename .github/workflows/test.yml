@@ -65,7 +65,7 @@ jobs:
           arguments: shadowJar
 
   test:
-    name: Tests
+    name: Test
     needs: changes
     if: ${{ needs.changes.outputs.kt }}
     runs-on: ubuntu-latest
@@ -97,7 +97,6 @@ jobs:
         id: markdown-report
         run: |
           echo "contents<<EOF
-
           <h3>Test coverage</h3>
 
           $(
@@ -115,9 +114,14 @@ jobs:
 
       - name: Add coverage to job summary
         run: |
-          cat \
-            build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.md \
-            >> $GITHUB_STEP_SUMMARY
+          cat >> $GITHUB_STEP_SUMMARY <<EOF
+          <h3>Test coverage</h3>
+
+          $(
+            cat \
+              build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.md
+          )
+          EOF
 
       - name: Store test report artifact
         uses: actions/upload-artifact@v3

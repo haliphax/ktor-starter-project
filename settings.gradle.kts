@@ -3,6 +3,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("8.1.1")
+    id("com.github.sakata1222.jacoco-markdown").version("1.4.0")
     id("com.google.devtools.ksp").version("1.8.20-1.0.10")
     id("com.google.protobuf").version("0.9.2")
     id("idea")
