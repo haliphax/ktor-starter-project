@@ -44,6 +44,18 @@ allprojects {
 
   repositories { mavenCentral() }
 
+  // version targeting
+  java {
+    sourceCompatibility = JavaVersion.VERSION_19
+    targetCompatibility = JavaVersion.VERSION_19
+    toolchain { languageVersion.set(JavaLanguageVersion.of(19)) }
+  }
+
+  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "19" }
+
+  // lock dependency versions for all configurations
+  dependencyLocking { lockAllConfigurations() }
+
   @Suppress("UnstableApiUsage")
   testing.suites {
     // integrationTest test suite
@@ -187,6 +199,21 @@ allprojects {
       tasks.named("allTestCoverageVerification"),
     )
   }
+
+  // task to lock all resolvable dependencies
+  tasks.register("resolveAndLockAll") {
+    notCompatibleWithConfigurationCache(
+      "Filters configurations at execution time",
+    )
+    doFirst {
+      require(gradle.startParameter.isWriteDependencyLocks)
+    }
+    doLast {
+      configurations.filter {
+        it.isCanBeResolved
+      }.forEach { it.resolve() }
+    }
+  }
 }
 
 // subprojects config
@@ -201,15 +228,6 @@ subprojects {
     val koinKspVersion: String by project
     ksp("io.insert-koin", "koin-ksp-compiler", koinKspVersion)
   }
-
-  // version targeting
-  java {
-    sourceCompatibility = JavaVersion.VERSION_19
-    targetCompatibility = JavaVersion.VERSION_19
-    toolchain { languageVersion.set(JavaLanguageVersion.of(19)) }
-  }
-
-  tasks.withType<KotlinCompile> { kotlinOptions.jvmTarget = "19" }
 
   sourceSets {
     main {
