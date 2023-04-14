@@ -37,7 +37,7 @@ jobs:
 
   codacy-security-scan:
     needs: changes
-    if: ${{ github.ref != 'refs/heads/master' && needs.changes.outputs.src == 'true' }}
+    if: ${{ needs.changes.outputs.src == 'true' }}
     permissions:
       # for actions/checkout to fetch code
       contents: read
