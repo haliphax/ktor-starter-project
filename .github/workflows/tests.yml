@@ -1,14 +1,17 @@
 name: Tests
 
 on:
+  pull_request:
+    branches: [master]
+
   push:
     branches: [master]
 
-  pull_request:
-    branches: [master]
-    types: [open, synchronize]
-
   workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-sha-${{ github.sha }}
 
 jobs:
   changes:
