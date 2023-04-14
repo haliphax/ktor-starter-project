@@ -1,0 +1,132 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [master]
+
+  push:
+    branches: [master]
+
+  workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-sha-${{ github.sha }}
+
+jobs:
+  changes:
+    name: Change detection
+    runs-on: ubuntu-latest
+    outputs:
+      kt: ${{ steps.changes.outputs.kt }}
+      misc: ${{ steps.changes.outputs.misc }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            kt:
+              - '**/*.{kt,properties}'
+              - '**/*gradle*'
+              - '**/resources/**'
+
+            misc:
+              - '**/*.{js,json,md,sh,xml,yaml,yml}'
+
+  build:
+    name: Build
+    needs: changes
+    if: |
+      ${{
+        needs.changes.outputs.kt
+        && contains(github.event_name, 'pull_request')
+      }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Set up Eclipse Java 19
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 19
+
+      - name: Build
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: shadowJar
+
+  test:
+    name: Tests
+    needs: changes
+    if: ${{ needs.changes.outputs.kt }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Set up Eclipse Java 19
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 19
+
+      - name: Run tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: allTestAggregateTestReport
+
+      - name: Coverage report
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: allTestCodeCoverageReportMarkdown
+
+      - name: Get markdown report contents
+        id: markdown-report
+        run: |
+          echo "contents<<EOF
+
+          <h3>Test coverage</h3>
+
+          $(
+            cat \
+              "build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.md"
+          )
+          EOF" >> $GITHUB_OUTPUT
+
+      - name: Add coverage to PR
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: ${{ steps.markdown-report.outputs.contents }}
+          pr_number: ${{ github.event.issue.number }}
+
+      - name: Add coverage to job summary
+        run: |
+          cat \
+            build/reports/jacoco/allTestCodeCoverageReport/allTestCodeCoverageReport.md \
+            >> $GITHUB_STEP_SUMMARY
+
+      - name: Store test report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: build/reports/tests/all/aggregated-results/
+
+      - name: Store coverage report artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: build/reports/jacoco/allTestCodeCoverageReport/html/

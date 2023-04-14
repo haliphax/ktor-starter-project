@@ -1,0 +1,101 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [master]
+
+  workflow_dispatch:
+
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-sha-${{ github.sha }}
+
+jobs:
+  changes:
+    name: Change detection
+    runs-on: ubuntu-latest
+    outputs:
+      kt: ${{ steps.changes.outputs.kt }}
+      misc: ${{ steps.changes.outputs.misc }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            kt:
+              - '**/*.{kt,properties}'
+              - '**/*gradle*'
+              - '**/resources/**'
+
+            misc:
+              - '**/*.{js,json,md,sh,xml,yaml,yml}'
+
+  commitlint:
+    name: CommitLint
+    if: ${{ contains(github.event_name, 'pull_request') }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Lint pull request title
+        env:
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: echo "$PR_TITLE" | npx commitlint
+
+  ktlint:
+    name: KtLint
+    needs: changes
+    if: ${{ needs.changes.outputs.kt }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Lint files using KtLint
+        uses: musichin/ktlint-check@v2
+        with:
+          ktlint-version: "0.48.2"
+          relative: true
+          patterns: "**.kt{,s}"
+
+  prettier:
+    name: Prettier
+    needs: changes
+    if: ${{ needs.changes.outputs.misc }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Merge with target branch
+        if: ${{ contains(github.event_name, 'pull_request') }}
+        uses: check-spelling/checkout-merge@main
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Lint files using Prettier
+        run: npx prettier -c -u .
