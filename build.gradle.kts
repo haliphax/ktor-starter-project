@@ -156,7 +156,7 @@ allprojects {
     val allSource = subprojects.map {
       it.sourceSets.main.get().allSource.sourceDirectories
     }
-    dependsOn(subprojects.map { it.tasks.named("allTest") })
+    dependsOn(tasks.named("allTestAggregateTestReport"))
     additionalSourceDirs.setFrom(allSource)
     classDirectories.setFrom(
       subprojects.map {
