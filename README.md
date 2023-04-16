@@ -36,7 +36,6 @@ version is `19`.) The project is primarily developed and tested against the
     - Also added to workflow job summary
 
 [adoptium]: https://adoptium.net
-[artifacts]: https://docs.github.com/en/actions/using-workflows/storing-workflow-data-as-artifacts#about-workflow-artifacts
 [coveralls]: https://coveralls.io
 [github actions workflow]: https://docs.github.com/en/actions/using-workflows/about-workflows
 [gitmoji]: https://gitmoji.dev
