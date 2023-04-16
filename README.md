@@ -2,9 +2,9 @@
 
 > A very basic [ktor][] project with some convenient configuration and structure
 
-![Build](https://img.shields.io/github/actions/workflow/status/haliphax/ktor-starter-project/test.yml?branch=master)
-![Test](https://img.shields.io/testspace/tests/haliphax/haliphax:ktor-starter-project/master)
-![Coverage](https://img.shields.io/coverallsCoverage/github/haliphax/ktor-starter-project)
+[![Build](https://img.shields.io/github/actions/workflow/status/haliphax/ktor-starter-project/build.yml?branch=master)](https://github.com/haliphax/ktor-starter-project/actions/workflows/build.yml)
+[![Test](https://img.shields.io/testspace/tests/haliphax/haliphax:ktor-starter-project/master)](https://haliphax.testspace.com/spaces/211589)
+[![Coverage](https://img.shields.io/coverallsCoverage/github/haliphax/ktor-starter-project)](https://coveralls.io/github/haliphax/ktor-starter-project)
 
 ## Prerequisites
 
