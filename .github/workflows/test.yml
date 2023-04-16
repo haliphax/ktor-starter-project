@@ -91,12 +91,13 @@ jobs:
         with:
           arguments: allTestAggregateTestReport
 
-      - uses: testspace-com/setup-testspace@v1
+      - name: Setup Testspace client
+        uses: testspace-com/setup-testspace@v1
         if: ${{ github.ref == 'refs/heads/master' }}
         with:
           domain: ${{ github.repository_owner }}
 
-      - name: Publish Results to Testspace
+      - name: Publish results to Testspace
         if: ${{ github.ref == 'refs/heads/master' }}
         run: testspace **/build/test-results/allTest/*.xml
 
