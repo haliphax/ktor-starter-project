@@ -2,6 +2,10 @@
 
 > A very basic [ktor] project with some convenient configuration and structure
 
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/haliphax/ktor-starter-project/test.yml?branch=master)
+![Testspace tests](https://img.shields.io/testspace/tests/haliphax/haliphax:ktor-starter-project/master)
+![Coveralls](https://img.shields.io/coverallsCoverage/github/haliphax/ktor-starter-project)
+
 ## Prerequisites
 
 You will need a JDK that matches the version used by the project. (The current
