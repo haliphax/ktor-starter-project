@@ -1,3 +1,13 @@
+import org.gradle.api.Project.GRADLE_PROPERTIES
+import java.util.Properties
+import kotlin.io.path.inputStream
+
+// load gradle.properties from root project
+Properties().apply {
+  load(rootDir.toPath().resolveSibling(GRADLE_PROPERTIES).inputStream())
+  forEach { (key, value) -> ext[key.toString()] = value }
+}
+
 plugins {
   `kotlin-dsl`
 }
@@ -8,8 +18,13 @@ repositories {
 }
 
 dependencies {
-  implementation("com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:1.8.20-1.0.10")
+  val kotlinVersion: String by project
+  val kspVersion: String by project
+
+  implementation(
+    "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$kspVersion",
+  )
   implementation("gradle.plugin.com.github.sakata1222:plugin:1.4.0")
-  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
+  implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
   implementation(kotlin("script-runtime"))
 }
