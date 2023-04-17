@@ -9,7 +9,6 @@ pluginManagement {
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
-    id("org.kordamp.gradle.jacoco").version("0.50.0")
     id("test-report-aggregation")
   }
 }
@@ -26,7 +25,6 @@ dependencyResolutionManagement {
   val logbackVersion: String by settings
   val protobufVersion: String by settings
 
-  @Suppress("UnstableApiUsage")
   versionCatalogs {
     create("common") {
       library("javax-annotation", "javax.annotation", "javax.annotation-api")
@@ -203,8 +201,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "root"
 include(
+  "common",
   "grpc-server",
   "http-server",
   "proto",
-  "common",
 )

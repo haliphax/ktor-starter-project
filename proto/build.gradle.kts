@@ -6,6 +6,7 @@ val protobufVersion: String by project
 
 plugins {
   id("com.google.protobuf")
+  kotlin("jvm")
 }
 
 dependencies {
