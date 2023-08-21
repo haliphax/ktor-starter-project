@@ -3,7 +3,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("8.1.1")
-    id("com.google.protobuf").version("0.9.3")
+    id("com.google.protobuf").version("0.9.4")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
@@ -176,7 +176,7 @@ dependencyResolutionManagement {
       library("kotest-runner", "io.kotest", "kotest-runner-junit5-jvm")
         .version(kotestVersion)
       library("mockk", "io.mockk", "mockk")
-        .version("1.13.5")
+        .version("1.13.7")
       library("server-test-host", "io.ktor", "ktor-server-test-host")
         .version(ktorVersion)
 
