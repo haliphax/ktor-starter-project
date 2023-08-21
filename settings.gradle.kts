@@ -3,7 +3,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("8.1.1")
-    id("com.google.protobuf").version("0.9.3")
+    id("com.google.protobuf").version("0.9.4")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
