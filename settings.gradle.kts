@@ -3,7 +3,7 @@ pluginManagement {
 
   plugins {
     id("com.github.johnrengelman.shadow").version("8.1.1")
-    id("com.google.protobuf").version("0.9.3")
+    id("com.google.protobuf").version("0.9.4")
     id("idea")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
@@ -32,7 +32,7 @@ dependencyResolutionManagement {
       library("koin-annotations", "io.insert-koin", "koin-annotations")
         .version(koinKspVersion)
       library("koin-ktor", "io.insert-koin", "koin-ktor")
-        .version("3.4.1")
+        .version("3.4.3")
       library("kotlin", "org.jetbrains.kotlin", "kotlin-bom")
         .version(kotlinVersion)
       library("kotlinx-s18n-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json")
