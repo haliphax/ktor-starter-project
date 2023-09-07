@@ -3,4 +3,4 @@
 
 # run prettier against files
 # shellcheck disable=SC2068
-npx prettier -u -c -w $@
+npx prettier -l -u -w $@
