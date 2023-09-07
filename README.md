@@ -9,7 +9,7 @@
 ## Prerequisites
 
 You will need a JDK that matches the version used by the project. (The current
-version is `19`.) The project is primarily developed and tested against the
+version is `17`.) The project is primarily developed and tested against the
 [Temurin][] JDK distribution from [Adoptium][].
 
 ## Features
@@ -46,9 +46,9 @@ version is `19`.) The project is primarily developed and tested against the
 [ktlint]: https://ktlint.github.io
 [ktor]: https://ktor.io
 [mockk]: https://mock.io
-[pluginmanagement]: https://docs.gradle.org/8.1/userguide/plugins.html#sec:plugin_management
+[pluginmanagement]: https://docs.gradle.org/8.3/userguide/plugins.html#sec:plugin_management
 [prettier]: https://prettier.io
-[temurin]: https://adoptium.net/temurin/releases/?version=19
-[test report aggregation]: https://docs.gradle.org/8.1/userguide/test_report_aggregation_plugin.html
+[temurin]: https://adoptium.net/temurin/releases/?version=17
+[test report aggregation]: https://docs.gradle.org/8.3/userguide/test_report_aggregation_plugin.html
 [testspace]: https://testspace.com
-[version catalog]: https://docs.gradle.org/8.1/userguide/platforms.html#sub:version-catalog
+[version catalog]: https://docs.gradle.org/8.3/userguide/platforms.html#sub:version-catalog
