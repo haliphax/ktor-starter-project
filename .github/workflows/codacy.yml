@@ -2,7 +2,7 @@ name: Codacy Security Scan
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
   schedule:
     - cron: "29 9 * * 6"

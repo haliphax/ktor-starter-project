@@ -2,10 +2,10 @@ name: Test
 
 on:
   pull_request:
-    branches: [master]
+    branches: [main]
 
   push:
-    branches: [master]
+    branches: [main]
 
   workflow_dispatch:
 
@@ -62,12 +62,12 @@ jobs:
 
       - name: Setup Testspace client
         uses: testspace-com/setup-testspace@v1
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         with:
           domain: ${{ github.repository_owner }}
 
       - name: Publish results to Testspace
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: testspace **/build/test-results/allTest/*.xml
 
       - name: Coverage report
@@ -106,7 +106,7 @@ jobs:
           EOF
 
       - name: Upload coverage to Coveralls
-        if: ${{ github.ref == 'refs/heads/master' }}
+        if: ${{ github.ref == 'refs/heads/main' }}
         uses: coverallsapp/github-action@v2
         with:
           base-path: src/main/kotlin
