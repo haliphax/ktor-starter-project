@@ -163,6 +163,8 @@ dependencyResolutionManagement {
     create("test") {
       val junitVersion: String by settings
 
+      library("grpc-all", "io.grpc", "grpc-all")
+        .version(grpcVersion)
       library("junit-api", "org.junit.jupiter", "junit-jupiter-api")
         .version(junitVersion)
       library("junit-jupiter", "org.junit.jupiter", "junit-jupiter")
@@ -183,6 +185,7 @@ dependencyResolutionManagement {
       bundle(
         "all",
         listOf(
+          "grpc-all",
           "junit-api",
           "junit-jupiter",
           "koin-test",
