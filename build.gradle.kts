@@ -21,6 +21,14 @@ allprojects {
   apply(plugin = "dev.haliphax.reproducible-builds")
   apply(plugin = "dev.haliphax.testing-suites")
   apply(plugin = "dev.haliphax.version-targeting")
+
+  dependencies {
+    constraints {
+      implementation("net.bytebuddy", "byte-buddy", "1.10.21") {
+        because("earlier versions do not support JDK 17")
+      }
+    }
+  }
 }
 
 // subprojects config

@@ -19,20 +19,15 @@ testing.suites {
   // integrationTest test suite
   create<JvmTestSuite>("integrationTest") {
     testType.set(TestSuiteType.INTEGRATION_TEST)
-    dependencies { implementation(project()) }
   }
 
   // aggregate test suite
   create<JvmTestSuite>("allTest") {
+    testType.set("all-test")
+
     val suites = testing.suites.withType<JvmTestSuite>().filter {
       it != this
     }
-
-    testType.set("all")
-
-    // include class paths from main source set
-    sources.compileClasspath += sourceSets.main.get().output
-    sources.runtimeClasspath += sourceSets.main.get().output
 
     // include class paths from all other testing suites
     suites.map {
@@ -41,10 +36,8 @@ testing.suites {
       sources.runtimeClasspath += set.runtimeClasspath
     }
 
+    // include dependencies from all other testing suites
     dependencies {
-      implementation(project())
-
-      // include dependencies from all other testing suites
       suites.forEach { suite ->
         project.configurations.filter { config ->
           config.name.startsWith(suite.name)
@@ -56,11 +49,14 @@ testing.suites {
       }
     }
 
+    // configure test task
     targets.all {
       testTask {
+        // include kotlin source code
         testClassesDirs = files(
           suites.map { "$buildDir/classes/kotlin/${it.name}" },
         )
+        // destination file for execution data
         extensions.configure<JacocoTaskExtension> {
           setDestinationFile(file("$buildDir/jacoco/allTest.exec"))
         }
@@ -71,6 +67,7 @@ testing.suites {
   // JvmTestSuite configuration
   withType<JvmTestSuite> {
     useJUnitJupiter()
+    dependencies { implementation(project()) }
 
     targets.all {
       testTask {
@@ -88,13 +85,18 @@ testing.suites {
   }
 }
 
+// configure testing suite source sets
 java {
   sourceSets {
-    named("integrationTest") {
-      // include compiled classes from main source set in integrationTest
-      compileClasspath += sourceSets.main.get().compileClasspath
-      // include generated KSP sources
-      java.srcDirs("build/generated/ksp/integrationTest/kotlin")
+    testing.suites.forEach {
+      named(it.name).configure {
+        // include compiled classes from main source set
+        val mainSrc = sourceSets.main.get()
+        compileClasspath += mainSrc.compileClasspath
+        runtimeClasspath += mainSrc.output
+        // include generated KSP sources
+        java.srcDirs("build/generated/ksp/$name/kotlin")
+      }
     }
   }
 }

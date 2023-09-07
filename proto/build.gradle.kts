@@ -36,7 +36,9 @@ protobuf {
   }
 }
 
-// declare explicit dependency to satisfy "allTest" testing suite
-tasks.getByName("extractIncludeAllTestProto") {
-  dependsOn(tasks.compileKotlin)
+// declare explicit dependency to satisfy testing suites
+tasks.filter {
+  it.name.matches(Regex("^extractInclude[a-zA-Z]Proto$"))
+}.forEach {
+  it.apply { dependsOn(tasks.compileKotlin) }
 }
