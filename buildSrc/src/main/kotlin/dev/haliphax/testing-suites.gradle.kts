@@ -52,9 +52,6 @@ testing.suites {
     // configure test task
     targets.all {
       testTask {
-        // always run, otherwise you have to run the "clean" task to reset
-        outputs.upToDateWhen { false }
-
         // include kotlin source code
         testClassesDirs = files(
           suites.map { "$buildDir/classes/kotlin/${it.name}" },
