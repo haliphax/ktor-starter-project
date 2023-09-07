@@ -52,6 +52,9 @@ testing.suites {
     // configure test task
     targets.all {
       testTask {
+        // always run, otherwise you have to run the "clean" task to reset
+        outputs.upToDateWhen { false }
+
         // include kotlin source code
         testClassesDirs = files(
           suites.map { "$buildDir/classes/kotlin/${it.name}" },
@@ -93,7 +96,7 @@ java {
         // include compiled classes from main source set
         val mainSrc = sourceSets.main.get()
         compileClasspath += mainSrc.compileClasspath
-        runtimeClasspath += mainSrc.output
+        runtimeClasspath += mainSrc.runtimeClasspath
         // include generated KSP sources
         java.srcDirs("build/generated/ksp/$name/kotlin")
       }
