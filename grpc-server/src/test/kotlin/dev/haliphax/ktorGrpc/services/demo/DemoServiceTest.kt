@@ -8,32 +8,34 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 
-class DemoServiceTest : DescribeSpec({
-  describe("DemoService") {
-    lateinit var demoService: DemoService
-    lateinit var demoController: DemoController
+class DemoServiceTest : DescribeSpec(
+  {
+    describe("DemoService") {
+      lateinit var demoService: DemoService
+      lateinit var demoController: DemoController
 
-    beforeContainer {
-      demoController = mockk(relaxed = true)
-      demoService = DemoService(
-        demoController = demoController,
-      )
-    }
-
-    describe("test") {
-      every { demoController.test(any()) } answers {
-        "Hi, ${firstArg<String>()}, I'm Dad"
+      beforeEach {
+        demoController = mockk(relaxed = true)
+        demoService = DemoService(
+          demoController = demoController,
+        )
       }
-      val request = DemoRequest.newBuilder().setMessage("hungry").build()
-      val result = demoService.demo(request)
 
       it("should call DemoController.test") {
+        val request = DemoRequest.newBuilder().setMessage("test").build()
+        demoService.demo(request)
+
         verify { demoController.test(any()) }
       }
 
       it("should return the message from DemoController.test") {
-        result.message shouldBe "Hi, hungry, I'm Dad"
+        every { demoController.test(any()) } returns "test"
+
+        val request = DemoRequest.newBuilder().setMessage("test").build()
+        val result = demoService.demo(request)
+
+        result.message shouldBe "test"
       }
     }
-  }
-})
+  },
+)
