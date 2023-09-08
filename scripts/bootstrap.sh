@@ -40,4 +40,4 @@ scripts/install-gitmoji-hook.sh
 
 # prepare gradle wrapper, resolve dependencies
 echo "Preparing Gradle environment"
-./gradlew wrapper --refresh-dependencies >/dev/null
+./gradlew tasks --refresh-dependencies >/dev/null
