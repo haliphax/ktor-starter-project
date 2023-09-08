@@ -1,8 +1,21 @@
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.0
+    hooks:
+      # blocks files larger than 500 KB
+      - id: check-added-large-files
+
+      # blocks files with leftover merge conflict markers
+      - id: check-merge-conflict
+
+      # blocks commits to master/main
+      - id: no-commit-to-branch
+        name: Block commits to main branch
+
   - repo: local
     hooks:
       - id: ktlint
-        name: ktlint
+        name: KtLint
         entry: scripts/ktlint.sh
         language: system
         types: [text]
@@ -10,7 +23,7 @@ repos:
         require_serial: true
 
       - id: prettier
-        name: prettier
+        name: Prettier
         entry: scripts/prettier.sh
         exclude: \.kts?$
         language: system

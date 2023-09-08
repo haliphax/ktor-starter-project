@@ -58,7 +58,7 @@ jobs:
       - name: Run tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: allTestAggregateTestReport
+          arguments: --no-daemon :allTestAggregateTestReport
 
       - name: Setup Testspace client
         uses: testspace-com/setup-testspace@v1
@@ -73,7 +73,7 @@ jobs:
       - name: Coverage report
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: allTestCodeCoverageReportMarkdown
+          arguments: --no-daemon :allTestCodeCoverageReportMarkdown
 
       - name: Get markdown report contents
         id: markdown-report

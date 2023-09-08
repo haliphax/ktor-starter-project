@@ -44,11 +44,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: lts/hydrogen
           cache: npm
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci --ignore-scripts
 
       - name: Lint pull request title
         env:
@@ -91,11 +91,11 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version: 18.x
+          node-version: lts/hydrogen
           cache: npm
 
       - name: Install dependencies
-        run: npm i
+        run: npm ci --ignore-scripts
 
       - name: Lint files using Prettier
         run: npx prettier -l -u .
