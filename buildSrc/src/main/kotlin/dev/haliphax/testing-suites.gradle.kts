@@ -76,7 +76,7 @@ testing.suites {
           showStackTraces = true
           exceptionFormat = TestExceptionFormat.SHORT
           events(
-            TestLogEvent.PASSED,
+            TestLogEvent.SKIPPED,
             TestLogEvent.FAILED,
           )
         }
