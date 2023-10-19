@@ -3,7 +3,7 @@
 > A very basic [ktor][] project with some convenient configuration and structure
 
 [![Build](https://img.shields.io/github/actions/workflow/status/haliphax/ktor-starter-project/build.yml?branch=main)](https://github.com/haliphax/ktor-starter-project/actions/workflows/build.yml)
-[![Test](https://haliphax.testspace.com/spaces/211589/badge?token=d1f655bd450b27e91066f4af89f7e0a465256f45)](https://haliphax.testspace.com/spaces/211589?utm_campaign=metric&utm_medium=referral&utm_source=badge "Test Cases")
+[![Test](https://haliphax.testspace.com/spaces/235991/badge?token=d1f655bd450b27e91066f4af89f7e0a465256f45)](https://haliphax.testspace.com/spaces/235991)
 [![Coverage](https://img.shields.io/coverallsCoverage/github/haliphax/ktor-starter-project)](https://coveralls.io/github/haliphax/ktor-starter-project)
 
 ## Prerequisites
