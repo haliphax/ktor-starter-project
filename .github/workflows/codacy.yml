@@ -24,7 +24,7 @@ jobs:
       src: ${{ steps.changes.outputs.src }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - uses: dorny/paths-filter@v2
         id: changes
@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4
+        uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@3b66437c0b315d8b5da4c2471860f7377c3dbcd4
