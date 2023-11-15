@@ -13,6 +13,8 @@ concurrency:
   cancel-in-progress: true
   group: ${{ github.workflow }}-sha-${{ github.sha }}
 
+permissions: read-all
+
 jobs:
   changes:
     name: Change detection
