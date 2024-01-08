@@ -18,9 +18,8 @@ import org.koin.ktor.ext.getKoin
 fun Application.configureRouting() {
   routing {
     val koin = application.getKoin()
-    val demoService: DemoServiceCoroutineStub = koin.get {
-      parametersOf(application.environment.config)
-    }
+    val demoService: DemoServiceCoroutineStub =
+      koin.get { parametersOf(application.environment.config) }
 
     authenticate("auth-admin") {
       get("/admin") {
