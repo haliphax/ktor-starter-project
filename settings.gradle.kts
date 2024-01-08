@@ -178,7 +178,7 @@ dependencyResolutionManagement {
       library("kotest-runner", "io.kotest", "kotest-runner-junit5-jvm")
         .version(kotestVersion)
       library("mockk", "io.mockk", "mockk")
-        .version("1.13.8")
+        .version("1.13.9")
       library("server-test-host", "io.ktor", "ktor-server-test-host")
         .version(ktorVersion)
 
