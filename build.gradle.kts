@@ -25,7 +25,7 @@ allprojects {
   dependencies {
     constraints {
       implementation("net.bytebuddy", "byte-buddy", "[1.10.21,)") {
-        because("previous versions do not support JDK 17")
+        because("previous versions do not support this project's JDK")
       }
     }
   }
