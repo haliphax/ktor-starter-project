@@ -8,7 +8,7 @@
   "packageRules": [
     {
       "automerge": true,
-      "matchUpdateTypes": ["digest", "minor", "pin"]
+      "matchUpdateTypes": ["digest", "minor", "patch", "pin"]
     }
   ],
   "$schema": "https://docs.renovatebot.com/renovate-schema.json"
