@@ -15,6 +15,8 @@ dependencies {
   }
 }
 
+val build = project.layout.buildDirectory.get().asFile
+
 testing.suites {
   // integrationTest test suite
   create<JvmTestSuite>("integrationTest") {
@@ -47,11 +49,11 @@ testing.suites {
         // include kotlin source code
         testClassesDirs =
           files(
-            suites.map { "$buildDir/classes/kotlin/${it.name}" },
+            suites.map { "$build/classes/kotlin/${it.name}" },
           )
         // destination file for execution data
         extensions.configure<JacocoTaskExtension> {
-          setDestinationFile(file("$buildDir/jacoco/allTest.exec"))
+          setDestinationFile(file("$build/jacoco/allTest.exec"))
         }
       }
     }
@@ -88,7 +90,7 @@ java {
         compileClasspath += mainSrc.compileClasspath
         runtimeClasspath += mainSrc.runtimeClasspath
         // include generated KSP sources
-        java.srcDirs("build/generated/ksp/$name/kotlin")
+        java.srcDirs("$build/generated/ksp/$name/kotlin")
       }
     }
   }
