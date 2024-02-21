@@ -1,4 +1,5 @@
 plugins {
+  id("org.jetbrains.dokka")
   id("org.jetbrains.kotlin.jvm")
   java
 
@@ -21,6 +22,7 @@ allprojects {
   apply(plugin = "dev.haliphax.reproducible-builds")
   apply(plugin = "dev.haliphax.testing-suites")
   apply(plugin = "dev.haliphax.version-targeting")
+  apply(plugin = "org.jetbrains.dokka")
 
   dependencies {
     constraints {
