@@ -25,37 +25,30 @@ testing.suites {
   create<JvmTestSuite>("allTest") {
     testType.set("all-test")
 
-    val suites = testing.suites.withType<JvmTestSuite>().filter {
-      it != this
-    }
+    val suites =
+      testing.suites.withType<JvmTestSuite>().filter {
+        it != this
+      }
 
-    // include class paths from all other testing suites
+    // include source paths from all other testing suites
     suites.map {
       val set = sourceSets.named(it.name).get()
       sources.compileClasspath += set.compileClasspath
       sources.runtimeClasspath += set.runtimeClasspath
     }
 
-    // include dependencies from all other testing suites
-    dependencies {
-      suites.forEach { suite ->
-        project.configurations.filter { config ->
-          config.name.startsWith(suite.name)
-        }.forEach { config ->
-          config.dependencies.forEach { dependency ->
-            implementation(dependency)
-          }
-        }
-      }
-    }
-
     // configure test task
     targets.all {
       testTask {
+        suites.forEach {
+          dependsOn(tasks.findByName(it.name))
+        }
+
         // include kotlin source code
-        testClassesDirs = files(
-          suites.map { "$buildDir/classes/kotlin/${it.name}" },
-        )
+        testClassesDirs =
+          files(
+            suites.map { "$buildDir/classes/kotlin/${it.name}" },
+          )
         // destination file for execution data
         extensions.configure<JacocoTaskExtension> {
           setDestinationFile(file("$buildDir/jacoco/allTest.exec"))
