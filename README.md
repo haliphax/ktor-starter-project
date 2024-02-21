@@ -48,7 +48,7 @@ version is `21`.) The project is primarily developed and tested against the
 [kotest]: https://kotest.io
 [ktlint]: https://ktlint.github.io
 [ktor]: https://ktor.io
-[mockk]: https://mock.io
+[mockk]: https://mockk.io
 [pluginmanagement]: https://docs.gradle.org/8.6/userguide/plugins.html#sec:plugin_management
 [prettier]: https://prettier.io
 [temurin]: https://adoptium.net/temurin/releases/?version=21
