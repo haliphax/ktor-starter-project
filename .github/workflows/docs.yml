@@ -58,7 +58,7 @@ jobs:
         with:
           arguments: --no-daemon dokkaHtmlMultiModule
 
-      - uses: actions/upload-pages-artifact@v2
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: build/dokka/htmlMultiModule/
 
