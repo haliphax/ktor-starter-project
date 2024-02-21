@@ -5,6 +5,7 @@ pluginManagement {
     id("com.github.johnrengelman.shadow").version("8.1.1")
     id("com.google.protobuf").version("0.9.4")
     id("idea")
+    id("org.jetbrains.dokka").version("1.9.10")
     id("org.jetbrains.kotlin.jvm").version(kotlinVersion)
     id("org.jetbrains.kotlin.plugin.serialization").version(kotlinVersion)
     id("test-report-aggregation")
@@ -200,7 +201,7 @@ dependencyResolutionManagement {
   }
 }
 
-rootProject.name = "root"
+rootProject.name = "ktor-starter-project"
 include(
   "common",
   "grpc-server",
