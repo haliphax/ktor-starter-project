@@ -35,9 +35,11 @@ version is `21`.) The project is primarily developed and tested against the
   - Coverage reports via [Coveralls][]
     - Also added to PR as comment
     - Also added to workflow job summary
+  - Builds project documentation with [dokka][]
 
 [adoptium]: https://adoptium.net
 [coveralls]: https://coveralls.io
+[dokka]: https://kotl.in/dokka
 [github actions workflow]: https://docs.github.com/en/actions/using-workflows/about-workflows
 [gitmoji]: https://gitmoji.dev
 [grpc]: https://grpc.io
