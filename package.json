@@ -1,6 +1,6 @@
 {
   "devDependencies": {
-    "commitlint": "^18.0.0",
+    "commitlint": "^19.0.0",
     "commitlint-config-gitmoji": "^2.3.1",
     "gitmoji-cli": "^9.0.0",
     "prettier": "^3.0.0"
