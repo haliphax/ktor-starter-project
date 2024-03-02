@@ -1,8 +1,8 @@
 # This is a Gradle generated file for dependency locking.
 # Manual edits can break the build and are not advised.
 # This file is expected to be part of source control.
-ch.qos.logback:logback-classic:1.5.1=aggregateCodeCoverageReportResults,aggregateTestReportResults
-ch.qos.logback:logback-core:1.5.1=aggregateCodeCoverageReportResults,aggregateTestReportResults
+ch.qos.logback:logback-classic:1.5.2=aggregateCodeCoverageReportResults,aggregateTestReportResults
+ch.qos.logback:logback-core:1.5.2=aggregateCodeCoverageReportResults,aggregateTestReportResults
 com.fasterxml.jackson.core:jackson-annotations:2.12.7=dokkaGfmMultiModulePlugin,dokkaGfmMultiModuleRuntime,dokkaGfmPlugin,dokkaGfmRuntime,dokkaHtmlMultiModulePlugin,dokkaHtmlMultiModuleRuntime,dokkaHtmlPlugin,dokkaHtmlRuntime,dokkaJavadocPlugin,dokkaJavadocRuntime,dokkaJekyllMultiModulePlugin,dokkaJekyllMultiModuleRuntime,dokkaJekyllPlugin,dokkaJekyllRuntime
 com.fasterxml.jackson.core:jackson-core:2.12.7=dokkaGfmMultiModulePlugin,dokkaGfmMultiModuleRuntime,dokkaGfmPlugin,dokkaGfmRuntime,dokkaHtmlMultiModulePlugin,dokkaHtmlMultiModuleRuntime,dokkaHtmlPlugin,dokkaHtmlRuntime,dokkaJavadocPlugin,dokkaJavadocRuntime,dokkaJekyllMultiModulePlugin,dokkaJekyllMultiModuleRuntime,dokkaJekyllPlugin,dokkaJekyllRuntime
 com.fasterxml.jackson.core:jackson-databind:2.12.7.1=dokkaGfmMultiModulePlugin,dokkaGfmMultiModuleRuntime,dokkaGfmPlugin,dokkaGfmRuntime,dokkaHtmlMultiModulePlugin,dokkaHtmlMultiModuleRuntime,dokkaHtmlPlugin,dokkaHtmlRuntime,dokkaJavadocPlugin,dokkaJavadocRuntime,dokkaJekyllMultiModulePlugin,dokkaJekyllMultiModuleRuntime,dokkaJekyllPlugin,dokkaJekyllRuntime
