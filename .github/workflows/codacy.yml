@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4
 
       - name: Run Codacy Analysis CLI
-        uses: codacy/codacy-analysis-cli-action@9c7e404d8f697ff0d9bfac374930356a4834295b
+        uses: codacy/codacy-analysis-cli-action@740bfaa8ff39510e8b8049e711ac5c801d194199
         with:
           verbose: true
           output: results.sarif
