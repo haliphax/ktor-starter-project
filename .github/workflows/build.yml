@@ -24,7 +24,7 @@ jobs:
       misc: ${{ steps.changes.outputs.misc }}
     steps:
       - name: Check out repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - uses: dorny/paths-filter@v3
         id: changes
@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@a5ac7e51b41094c92402da3b24376905380afc29 # v4
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4
 
       - name: Merge with target branch
         if: ${{ contains(github.event_name, 'pull_request') }}
