@@ -58,10 +58,11 @@ jobs:
           distribution: temurin
           java-version: 21
 
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
       - name: Run tests
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: --no-daemon :allTestAggregateTestReport
+        run: ./gradlew --no-daemon :allTestAggregateTestReport
 
       - name: Setup Testspace client
         uses: testspace-com/setup-testspace@v1
@@ -74,9 +75,7 @@ jobs:
         run: testspace **/build/test-results/allTest/*.xml
 
       - name: Coverage report
-        uses: gradle/gradle-build-action@v3
-        with:
-          arguments: --no-daemon :allTestCodeCoverageReportMarkdown
+        run: ./gradlew --no-daemon :allTestCodeCoverageReportMarkdown
 
       - name: Get markdown report contents
         id: markdown-report
