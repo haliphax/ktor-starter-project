@@ -19,10 +19,9 @@ repositories {
 
 dependencies {
   val kotlinVersion: String by project
-  val kspVersion: String by project
 
   implementation(
-    "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$kspVersion",
+    "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:$kotlinVersion-1.0.25",
   )
   implementation("gradle.plugin.com.github.sakata1222:plugin:1.4.0")
   implementation("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
