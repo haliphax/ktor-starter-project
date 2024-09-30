@@ -33,7 +33,7 @@ dependencyResolutionManagement {
       library("koin-annotations", "io.insert-koin", "koin-annotations")
         .version(koinKspVersion)
       library("koin-ktor", "io.insert-koin", "koin-ktor")
-        .version("3.5.6")
+        .version("4.0.0")
       library("kotlin", "org.jetbrains.kotlin", "kotlin-bom")
         .version(kotlinVersion)
       library("kotlinx-s18n-json", "org.jetbrains.kotlinx", "kotlinx-serialization-json")
