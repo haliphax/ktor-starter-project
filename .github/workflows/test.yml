@@ -91,7 +91,7 @@ jobs:
 
       - name: Add coverage to PR
         if: ${{ contains(github.event_name, 'pull_request') }}
-        uses: thollander/actions-comment-pull-request@v2
+        uses: thollander/actions-comment-pull-request@v3
         with:
           message: ${{ steps.markdown-report.outputs.contents }}
           pr_number: ${{ github.event.issue.number }}
